@@ -1,5 +1,7 @@
 @echo off
 setlocal
+color 17
+cls
 echo Script by Jisll
 
 :: Disable Telemetry
