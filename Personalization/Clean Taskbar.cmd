@@ -1,0 +1,19 @@
+@echo off
+echo Script by Jisll
+echo Applying Clean Taskbar...
+set RegKeyHKCU=HKEY_CURRENT_USER\Software
+set RegKeyHKLM=HKEY_LOCAL_MACHINE\SOFTWARE
+echo Disabling Meet Now...
+reg add "%RegKeyHKCU%\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v HideSCAMeetNow /t REG_DWORD /d 1 /f
+reg add "%RegKeyHKLM%\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v HideSCAMeetNow /t REG_DWORD /d 1 /f
+echo Disabling People...
+reg add "%RegKeyHKLM%\Policies\Microsoft\Windows\Explorer" /v HidePeopleBar /t REG_DWORD /d 1 /f
+reg add "%RegKeyHKCU%\Policies\Microsoft\Windows\Explorer" /v HidePeopleBar /t REG_DWORD /d 1 /f
+echo Hiding People Bar...
+reg add "%RegKeyHKLM%\Microsoft\Windows\CurrentVersion\Explorer\Advanced\People" /v PeopleBand /t REG_DWORD /d 0 /f
+echo Disabling Weather, News, and Interests on taskbar...
+reg add "%RegKeyHKLM%\Policies\Microsoft\Windows\Windows Feeds" /v EnableFeeds /t REG_DWORD /d 0 /f
+echo Hiding Weather, News, and Interests on taskbar...
+reg add "%RegKeyHKLM%\Microsoft\Windows\CurrentVersion\Feeds" /v ShellFeedsTaskbarViewMode /t REG_DWORD /d 2 /f
+echo Clean Taskbar applied.
+pause
