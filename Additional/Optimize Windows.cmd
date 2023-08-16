@@ -14,12 +14,6 @@ echo.
 echo Press ENTER to start the process...
 pause > nul
 
-:HandleError
-echo An error occurred: %1
-echo Press any key to exit...
-pause > nul
-exit /b
-
 :: Disable Telemetry
 reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\DataCollection" /v "AllowTelemetry" /t REG_DWORD /d 0 /f
 
