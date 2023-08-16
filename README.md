@@ -1,5 +1,8 @@
 <h1 align="center"><img width=24px src="https://images.pling.com/img/00/00/64/66/02/1700514/11.png"> Perfect Windows 11</h1>
-
+<p align="center">
+		<img src="https://cdn.discordapp.com/attachments/1010222261250293841/1141472708668948500/output-onlinepngtools.png">
+	</a>
+</p> 
 <p align="center">🌌 Unveiling the Future: Your Gateway to an Enhanced Operating Experience</p>
 
 Welcome to the Perfect Windows 11, where the boundaries of possibility are redefined. Step into a realm where cutting-edge innovations and streamlined experiences converge to shape the operating system of tomorrow. Explore our curated galaxy of features, optimizations, and customization scripts, designed to propel your digital journey into the future.
