@@ -26,4 +26,4 @@ Dive into the heart of the future by embracing the core principles that guide ou
 
 ⚡ **Hyper-Performance**: Power through tasks at warp speed with quantum computing-enhanced processing, eliminating lag and unlocking unparalleled efficiency.
 
-🪐 **Your Path to the Stars**: Align your journey with the Perfect Windows 11 and embrace the unfolding possibilities of technology's evolution. Together, we're shaping the future, one quantum leap at a time. 🌠
+🪐 **Your Path to the Stars**: Align your journey with the Perfect Windows 11 and embrace the unfolding possibilities of technology's evolution. Together, we're shaping the future, one quantum leap at a time.
