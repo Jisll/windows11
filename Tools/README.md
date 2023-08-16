@@ -1,4 +1,4 @@
-<h1 align="center">Ultimate Windows 11 Tools and Tweaks</h1>
+<h1 align="center"><img width=24px src="https://camo.githubusercontent.com/0148665dacf61888f704391c0dcbdaf3af0af31b25279508513a5dac4d43be13/68747470733a2f2f692e6962622e636f2f4d365a6451714c2f7465726d696e616c2e706e67"> Ultimate Windows 11 Tools and Tweaks</h1>
 
 ## System Tools
 ### AutoRun Management
@@ -76,3 +76,44 @@
 ### Compatibility Check (Win11)
 - [WhyNotWin11](https://github.com/rcmaehl/WhyNotWin11)
 - [Win11SysCheck](https://github.com/mq1n/Win11SysCheck)
+
+## Additional Tools
+### Backup & Recovery
+- [Macrium Reflect](https://www.macrium.com/reflectfree)
+- [Veeam Agent](https://www.veeam.com/windows-endpoint-server-backup-free.html)
+
+### File and Folder Comparison
+- [WinMerge](https://winmerge.org/)
+- [Beyond Compare](https://www.scootersoftware.com/)
+
+### Text and Code Editors
+- [Visual Studio Code](https://code.visualstudio.com/)
+- [Notepad++](https://notepad-plus-plus.org/)
+
+### Screenshot Tools
+- [Greenshot](https://getgreenshot.org/)
+- [ShareX](https://getsharex.com/)
+
+### PDF Tools
+- [Adobe Acrobat Reader](https://get.adobe.com/reader/)
+- [PDFCreator](https://www.pdfforge.org/pdfcreator)
+
+### Encryption and Data Security
+- [VeraCrypt](https://www.veracrypt.fr/)
+- [KeePass](https://keepass.info/)
+
+### System Monitoring
+- [HWiNFO](https://www.hwinfo.com/)
+- [Open Hardware Monitor](https://openhardwaremonitor.org/)
+
+### Network Tools
+- [Wireshark](https://www.wireshark.org/)
+- [Advanced IP Scanner](https://www.advanced-ip-scanner.com/)
+
+### Music and Multimedia
+- [Audacity](https://www.audacityteam.org/)
+- [VLC Media Player](https://www.videolan.org/vlc/)
+
+### Notes and Task Management
+- [Evernote](https://evernote.com/)
+- [Todoist](https://todoist.com/)
