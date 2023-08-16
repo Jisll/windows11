@@ -2,7 +2,17 @@
 setlocal
 color 17
 cls
-echo Script by Jisll
+echo.
+echo.
+echo    ____        _      __    ___            ___      ____
+echo   / __/_______(_)__  / /_  / _ )__ __  __ / (_)__  / / /
+echo  _\ \/ __/ __/ / _ \/ __/ / _  / // / / // / (_- // / / 
+echo /___/\__/_/ /_/ .__/\__/ /____/\_, /  \___/_/__ /_ /_/  
+echo              /_/              /___/                    
+echo.
+echo.
+echo Press ENTER to start the process...
+pause > nul
 
 :: Disable Telemetry
 reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\DataCollection" /v "AllowTelemetry" /t REG_DWORD /d 0 /f
