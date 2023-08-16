@@ -64,8 +64,8 @@ for %%s in (%services1%) do (
 )
 
 :: Set Windows Update Service to Disabled Start
-set "services=AJRouter AppVClient AssignedAccessManagerSvc DiagTrack DialogBlockingService MsKeyboardFilter NetTcpPortSharing RemoteAccess RemoteRegistry UevAgentService shpamsvc ssh-agent tzautoupdate uhssvc"
-for %%s in (%services%) do (
+set "services2=AJRouter AppVClient AssignedAccessManagerSvc DiagTrack DialogBlockingService MsKeyboardFilter NetTcpPortSharing RemoteAccess RemoteRegistry UevAgentService shpamsvc ssh-agent tzautoupdate uhssvc"
+for %%s in (%services2%) do (
     sc config "%%s" start= disabled
     echo "%%s" set to Disabled
 )
