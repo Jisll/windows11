@@ -6,7 +6,21 @@
 
 Welcome to the **Perfect Windows 11** repository, where we empower your current Windows 11 experience with a curated collection of features, optimizations, and customization scripts. Our goal is to provide you with a comprehensive toolkit that elevates your daily interactions and enhances your operating experience.
 
-### [Click here to get Perfect Windows 11](https://github.com/Jisll/windows11/blob/main/Optimize%20Windows.cmd)
+## 🚀 Getting Started with Optimization Script
+
+1. **Clone Repository**: Begin by cloning this repository to your local machine.
+
+2. **Navigate to the Script**: Open the cloned repository and locate the "Optimize Windows.cmd" script.
+
+3. **Run the Script**: Double-click on the script to run it. This script will apply various tweaks and optimizations to enhance your Windows 11 experience.
+
+4. **Backup Your Data**: Before proceeding, ensure you have a backup of your important data. While the script is designed to optimize Windows 11, caution is advised.
+
+5. **Reboot**: After the script finishes running, it's recommended to reboot your system for changes to take effect.
+
+## ⚠️ Important Note
+
+The **Perfect Windows 11** optimizations are designed to enhance your existing Windows 11 experience and are not affiliated with Microsoft. While the optimizations are tested, use caution when implementing changes and ensure you have backups of your data before proceeding.
 
 ## 💡 Unleash the Possibilities
 
@@ -63,5 +77,3 @@ The **Perfect Windows 11** is a collaborative project that thrives on community 
 ## 🌌 Join the Journey
 
 Align your Windows 11 journey with the **Perfect Windows 11**. Let's embark on a transformational experience that empowers you to shape your digital world. With our collective efforts, we're driving Windows 11 enhancements forward, one step at a time.
-
-**Note**: The **Perfect Windows 11** is designed to enhance your existing Windows 11 experience and is not affiliated with Microsoft. Use caution when implementing changes and ensure you have backups of your data before proceeding.
