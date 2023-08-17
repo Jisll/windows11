@@ -6,7 +6,7 @@
 
 Welcome to the **Perfect Windows 11** repository, where we empower your current Windows 11 experience with a curated collection of features, optimizations, and customization scripts. Our goal is to provide you with a comprehensive toolkit that elevates your daily interactions and enhances your operating experience.
 
-### [Click here to get Perfect Windows 11](https://github.com/Jisll/windows11/blob/main/Additional/Optimize%20Windows.cmd)
+### [Click here to get Perfect Windows 11](https://github.com/Jisll/windows11/blob/main/Optimize%20Windows.cmd)
 
 ## 💡 Unleash the Possibilities
 
