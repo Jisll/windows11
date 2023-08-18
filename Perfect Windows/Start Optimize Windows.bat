@@ -55,7 +55,7 @@ call:Menu_[%choice%]
 goto :Main-Menu
 
 :: Option 1: Custom Tweaks
-:Menu_[1] Custom Tweaks
+:Menu_[1] Run Perfect Windows
 cls 
 :: Details about what this option does...
 call Optimize_Windows.cmd
