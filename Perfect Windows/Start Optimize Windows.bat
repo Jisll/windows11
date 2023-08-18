@@ -8,7 +8,6 @@ color 0F
 call :Colors
 
 REM Check for Windows 10 Compatibility
-:Compatibility-Check
 ver | find "10" >nul 2>&1
 if not %errorlevel% == 0 (
     echo %BRIGHT_BLACK%Sorry, your system is not compatible with this tool%DARK_WHITE%
@@ -17,7 +16,6 @@ if not %errorlevel% == 0 (
 )
 
 REM Check for Administrator Privileges
-:Privileges-Check
 openfiles 1>nul 2>&1
 if not %errorlevel% == 0 (
     echo %BRIGHT_BLACK%To continue run this tool as %DARK_RED%administrator%DARK_WHITE%
@@ -38,37 +36,19 @@ echo  %BRIGHT_RED%╚══════╝ ╚═════╝╚═╝  ╚�
 echo.
 echo.
 echo ══════════════════════════════════════════════════════════════
-echo.                                            %BRIGHT_BLACK%Twitter @Jisllos%WHITE%
+echo.                           %BRIGHT_BLACK%Twitter @Jisllos%WHITE%
 for /f "tokens=1,2,* delims=_ " %%A in ('"findstr /b /c:":Menu_" "%~f0""') do (
     echo  !BRIGHT_GREEN!%%B !WHITE!%%C
 )
 echo.
 set "choice="
 set /p choice=%DARK_WHITE%Choose an option to continue: %DARK_GREEN%
-if not defined choice (
-    echo %BRIGHT_BLACK%Invalid choice, please try again.%DARK_WHITE%
-    pause
-    goto :Main-Menu
-)
-color 0F
-call:Menu_[%choice%]
+if not defined choice goto :Main-Menu
+call :Menu_[%choice%] 2>nul || (echo %BRIGHT_BLACK%Invalid choice, please try again.%DARK_WHITE% & pause)
 goto :Main-Menu
 
-REM Option 1: Custom Tweaks
+REM Option 1: Perfect Windows
 :Menu_[1] Run Perfect Windows
-cls 
-REM Details about what this option does...
-@echo off
-setlocal EnableDelayedExpansion
-echo.
-echo.
-echo    ____        _      __    ___            ___      ____
-echo   / __/_______(_)__  / /_  / _ )__ __  __ / (_)__  / / /
-echo  _\ \/ __/ __/ / _ \/ __/ / _  / // / / // / (_- // / /
-echo /___/\__/_/ /_/ .__/\__/ /____/\_, /  \___/_/__ /_ /_/  
-echo              /_/              /___/                    
-echo.
-echo.
 
 REM Services
 set "services_manual=ALG AppIDSvc AppMgmt AppReadiness AppXSvc Appinfo AxInstSV BDESVC BITS BTAGService BcastDVRUserService_dc2a4 BluetoothUserService_dc2a4 Browser CDPSvc COMSysApp CaptureService_dc2a4 CertPropSvc ClipSVC ConsentUxUserSvc_dc2a4 CredentialEnrollmentManagerUserSvc_dc2a4 CscService DcpSvc DevQueryBroker DeviceAssociationBrokerSvc_dc2a4 DeviceAssociationService DeviceInstall DevicePickerUserSvc_dc2a4 DevicesFlowUserSvc_dc2a4 DisplayEnhancementService DmEnrollmentSvc DoSvc DsSvc DsmSvc EFS EapHost EntAppSvc FDResPub Fax FrameServer FrameServerMonitor GraphicsPerfSvc HomeGroupListener HomeGroupProvider HvHost IEEtwCollectorService IKEEXT InstallService InventorySvc IpxlatCfgSvc KtmRm LicenseManager LxpSvc MSDTC MSiSCSI MapsBroker McpManagementService MessagingService_dc2a4 MicrosoftEdgeElevationService MixedRealityOpenXRSvc NPSMSvc_dc2a4 NaturalAuthentication NcaSvc NcbService NcdAutoSetup NetSetupSvc Netlogon Netman NgcCtnrSvc NgcSvc NlaSvc P9RdrService_dc2a4 PNRPAutoReg PNRPsvc PcaSvc PeerDistSvc PenService_dc2a4 PerfHost PhoneSvc PimIndexMaintenanceSvc_dc2a4 PlugPlay PolicyAgent PrintNotify PrintWorkflowUserSvc_dc2a4 PushToInstall QWAVE RasAuto RasMan RetailDemo RmSvc RpcLocator SCPolicySvc SCardSvr SDRSVC SEMgrSvc SNMPTRAP SNMPTrap SSDPSRV ScDeviceEnum SecurityHealthService Sense SensorDataService SensorService SensrSvc SessionEnv SharedAccess SharedRealitySvc SmsRouter SstpSvc StateRepository StiSvc StorSvc TabletInputService TapiSrv TextInputManagementService TieringEngineService TimeBroker TimeBrokerSvc TokenBroker TroubleshootingSvc TrustedInstaller UI0Detect UdkUserSvc_dc2a4 UmRdpService UnistoreSvc_dc2a4 UserDataSvc_dc2a4 UsoSvc VSS VacSvc W32Time WEPHOSTSVC WFDSConMgrSvc WMPNetworkSvc WManSvc WPDBusEnum WSService WSearch WaaSMedicSvc WalletService WarpJITSvc WbioSrvc WcsPlugInService WdNisSvc WdiServiceHost WdiSystemHost WebClient Wecsvc WerSvc WiaRpc WinHttpAutoProxySvc WinRM WpcMonSvc WpnService WwanSvc XblAuthManager XblGameSave XboxGipSvc XboxNetApiSvc autotimesvc bthserv camsvc cbdhsvc_dc2a4 cloudidsvc dcsvc defragsvc diagnosticshub.standardcollector.service diagsvc dmwappushservice dot3svc edgeupdate edgeupdatem embeddedmode fdPHost fhsvc hidserv icssvc lfsvc lltdsvc lmhosts msiserver netprofm p2pimsvc p2psvc perceptionsimulation pla seclogon smphost spectrum sppsvc svsvc swprv upnphost vds vm3dservice vmicguestinterface vmicheartbeat vmickvpexchange vmicrdv vmicshutdown vmictimesync vmicvmsession vmicvss vmvss wbengine wcncsvc webthreatdefsvc wercplsupport wisvc wlidsvc wlpasvc wmiApSrv workfolderssvc wscsvc wuauserv wudfsvc"
@@ -91,17 +71,6 @@ for %%t in (
     "Microsoft\Windows\Feedback\Siuf\DmClientOnScenarioDownload"
     "Microsoft\Windows\Windows Error Reporting\QueueReporting"
 ) do schtasks /Change /TN "%%t" /Disable
-
-REM Disable Telemetry Tasks
-schtasks /Change /TN "Microsoft\Windows\Application Experience\Microsoft Compatibility Appraiser" /Disable
-schtasks /Change /TN "Microsoft\Windows\Application Experience\ProgramDataUpdater" /Disable
-schtasks /Change /TN "Microsoft\Windows\Autochk\Proxy" /Disable
-schtasks /Change /TN "Microsoft\Windows\Customer Experience Improvement Program\Consolidator" /Disable
-schtasks /Change /TN "Microsoft\Windows\Customer Experience Improvement Program\UsbCeip" /Disable
-schtasks /Change /TN "Microsoft\Windows\DiskDiagnostic\Microsoft-Windows-DiskDiagnosticDataCollector" /Disable
-schtasks /Change /TN "Microsoft\Windows\Feedback\Siuf\DmClient" /Disable
-schtasks /Change /TN "Microsoft\Windows\Feedback\Siuf\DmClientOnScenarioDownload" /Disable
-schtasks /Change /TN "Microsoft\Windows\Windows Error Reporting\QueueReporting" /Disable
 
 REM Disable Telemetry via Registry
 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\DataCollection" /v AllowTelemetry /t REG_DWORD /d 0 /f
@@ -186,20 +155,12 @@ reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\PushNotifications" /v "T
 REM Disable Cortana
 powershell -Command "Get-AppxPackage -allusers Microsoft.549981C3F5F10 | Remove-AppxPackage"
 
-@echo off
 cls
-echo Press any key . . .
-pause >nul
-taskkill /f /im explorer.exe >nul 2>&1
-start explorer >nul 2>&1
-timeout /t 2 >nul
-cls
-echo Tweaks applied successfully. Please proceed to restart your computer.
+echo Tweaks applied successfully. Please restart your computer.
 echo Press ENTER to return to the start.
 pause >nul
 cls
 goto :eof
-
 
 REM Option 2: Info
 :Menu_[I] Info
@@ -219,17 +180,6 @@ goto :eof
 REM Option 3: Exit
 :Menu_[E] Exit
 exit
-
-REM Backup Warning
-:BackUp-Warn
-cls
-choice /c:YN /m "Did you back up your system"
-if not %errorlevel% == 1 (
-    cls
-    echo %BRIGHT_BLACK%Please back up your system to prevent any %DARK_RED%errors or damages %BRIGHT_BLACK%then try to run the tool%DARK_WHITE%
-    pause
-    exit /b
-)
 
 REM Colors Definitions
 :Colors
