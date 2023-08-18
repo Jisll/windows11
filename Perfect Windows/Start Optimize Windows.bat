@@ -7,7 +7,7 @@ title Perfect Windows
 color 0F
 call :Colors
 
-:: Check for Windows 10 Compatibility
+REM Check for Windows 10 Compatibility
 :Compatibility-Check
 ver | find "10" >nul 2>&1
 if not %errorlevel% == 0 (
@@ -16,7 +16,7 @@ if not %errorlevel% == 0 (
     exit
 )
 
-:: Check for Administrator Privileges
+REM Check for Administrator Privileges
 :Privileges-Check
 openfiles 1>nul 2>&1
 if not %errorlevel% == 0 (
@@ -25,7 +25,7 @@ if not %errorlevel% == 0 (
     exit
 )
 
-:: Main Menu
+REM Main Menu
 :Main-Menu
 cls
 echo.
@@ -54,10 +54,10 @@ color 0F
 call:Menu_[%choice%]
 goto :Main-Menu
 
-:: Option 1: Custom Tweaks
+REM Option 1: Custom Tweaks
 :Menu_[1] Run Perfect Windows
 cls 
-:: Details about what this option does...
+REM Details about what this option does...
 @echo off
 setlocal EnableDelayedExpansion
 echo.
@@ -193,7 +193,7 @@ start explorer
 pause
 goto :eof
 
-:: Option 2: Info
+REM Option 2: Info
 :Menu_[I] Info
 cls
 echo By ~Jisll ^| Twitter: @Jisllos
@@ -201,11 +201,11 @@ echo.
 pause
 goto :eof
 
-:: Option 3: Exit
+REM Option 3: Exit
 :Menu_[E] Exit
 exit
 
-:: Backup Warning
+REM Backup Warning
 :BackUp-Warn
 cls
 choice /c:YN /m "Did you back up your system"
@@ -216,7 +216,7 @@ if not %errorlevel% == 1 (
     exit /b
 )
 
-:: Colors Definitions
+REM Colors Definitions
 :Colors
 set "DARK_RED=[31m"
 set "DARK_GREEN=[32m"
