@@ -17,7 +17,7 @@ Follow these simple steps to begin optimizing your Windows 11:
 
 1. **Clone Repository**: `git clone https://github.com/Jisll/windows11`.
 
-2. **Navigate to the Script**: Open the cloned repository and find "Optimize Windows.cmd."
+2. **Navigate to the Script**: Open the cloned repository and find "`Start Optimize Windows.bat`."
 
 3. **Run the Script**: Double-click to run and apply various enhancements.
 
