@@ -134,7 +134,6 @@ REM Disable Cortana
 powershell -Command "Get-AppxPackage -allusers Microsoft.549981C3F5F10 | Remove-AppxPackage"
 
 REM Disable Mitigations
-@echo off
 set LogFile=APB_Log.txt
 echo Disabling Mitigations >> %LogFile%
 powershell "ForEach($v in (Get-Command -Name \"Set-ProcessMitigation\").Parameters[\"Disable\"].Attributes.ValidValues){Set-ProcessMitigation -System -Disable $v.ToString() -ErrorAction SilentlyContinue}" >> %LogFile%
