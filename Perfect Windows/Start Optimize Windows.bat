@@ -194,7 +194,7 @@ taskkill /f /im explorer.exe >nul 2>&1
 start explorer >nul 2>&1
 timeout /t 2 >nul
 cls
-echo Tweaks applied successfully.
+echo Tweaks applied successfully. Please proceed to restart your computer.
 echo Press ENTER to return to the start.
 pause >nul
 cls
