@@ -75,9 +75,9 @@ set "services_manual=ALG AppIDSvc AppMgmt AppReadiness AppXSvc Appinfo AxInstSV 
 set "services_auto=AudioEndpointBuilder AudioSrv Audiosrv BFE BrokerInfrastructure BthAvctpSvc BthHFSrv CDPUserSvc_dc2a4 CoreMessagingRegistrar CryptSvc DPS DcomLaunch Dhcp DispBrokerDesktopSvc Dnscache DusmSvc EventLog EventSystem FontCache KeyIso LSM LanmanServer LanmanWorkstation MpsSvc OneSyncSvc_dc2a4 Power ProfSvc RpcEptMapper RpcSs SENS SamSs Schedule SgrmBroker ShellHWDetection Spooler SysMain SystemEventsBroker TermService Themes TrkWks UserManager VGAuthService VMTools VaultSvc Wcmsvc WinDefend Winmgmt WlanSvc WpnUserService_dc2a4 gpsvc iphlpsvc mpssvc nsi tiledatamodelsvc webthreatdefusersvc_dc2a4"
 set "services_disabled=AJRouter AppVClient AssignedAccessManagerSvc DiagTrack DialogBlockingService MsKeyboardFilter NetTcpPortSharing RemoteAccess RemoteRegistry UevAgentService shpamsvc ssh-agent tzautoupdate uhssvc"
 
-for %%s in (%services_manual%) do sc config "%%s" start= demand && echo "%%s" set to Manual
-for %%s in (%services_auto%) do sc config "%%s" start= auto && echo "%%s" set to Automatic
-for %%s in (%services_disabled%) do sc config "%%s" start= disabled && echo "%%s" set to Disabled
+for %%s in (%services_manual%) do sc config "%%s" start= demand && echo "%%s" set to %BRIGHT_YELLOW%Manual
+for %%s in (%services_auto%) do sc config "%%s" start= auto && echo "%%s" set to %BRIGHT_BLUE%Automatic
+for %%s in (%services_disabled%) do sc config "%%s" start= disabled && echo "%%s" set to %BRIGHT_RED%Disabled
 
 REM Disable Telemetry Tasks
 for %%t in (
@@ -186,17 +186,32 @@ reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\PushNotifications" /v "T
 REM Disable Cortana
 powershell -Command "Get-AppxPackage -allusers Microsoft.549981C3F5F10 | Remove-AppxPackage"
 
-echo.
+@echo off
+cls
+echo Press any key . . .
+pause >nul
+taskkill /f /im explorer.exe >nul 2>&1
+start explorer >nul 2>&1
+timeout /t 2 >nul
+cls
 echo Tweaks applied successfully.
-taskkill /f /im explorer.exe>nul
-start explorer 
-pause
+echo Press ENTER to return to the start.
+pause >nul
+cls
 goto :eof
+
 
 REM Option 2: Info
 :Menu_[I] Info
 cls
-echo By ~Jisll ^| Twitter: @Jisllos
+echo.
+echo  %WHITE%██████%BRIGHT_PURPLE%╗ %WHITE%██%BRIGHT_PURPLE%╗   %WHITE%██%BRIGHT_PURPLE%╗         %WHITE%██%WHITE%╗%WHITE%██%WHITE%╗%WHITE%███████%WHITE%╗%WHITE%██%WHITE%╗     %WHITE%██%WHITE%╗     
+echo  %WHITE%██%BRIGHT_PURPLE%╔══%WHITE%██%BRIGHT_PURPLE%╗╚%WHITE%██%BRIGHT_PURPLE%╗ %WHITE%██%BRIGHT_PURPLE%╔╝         %WHITE%██%WHITE%║%WHITE%██%WHITE%║%WHITE%██%WHITE%╔════╝%WHITE%██%WHITE%║     %WHITE%██%WHITE%║     
+echo  %WHITE%██████%BRIGHT_PURPLE%╔╝ ╚%WHITE%████%BRIGHT_PURPLE%╔╝          %WHITE%██%WHITE%║%WHITE%██%WHITE%║%WHITE%███████%WHITE%╗%WHITE%██%WHITE%║     %WHITE%██%WHITE%║     
+echo  %WHITE%██%BRIGHT_PURPLE%╔══%WHITE%██%BRIGHT_PURPLE%╗  ╚%WHITE%██%BRIGHT_PURPLE%╔╝      %WHITE%██   %WHITE%██%WHITE%║%WHITE%██%WHITE%║%WHITE%╚════%WHITE%██%WHITE%║%WHITE%██%WHITE%║     %WHITE%██%WHITE%║     
+echo  %WHITE%██%WHITE%████%BRIGHT_PURPLE%╔╝   %WHITE%██%BRIGHT_PURPLE%║%WHITE%       ╚%WHITE%█████%WHITE%╔╝%WHITE%██%WHITE%║%WHITE%███████%WHITE%║%WHITE%███████%WHITE%╗%WHITE%███████%WHITE%╗
+echo  %BRIGHT_PURPLE%╚═════╝    ╚═╝        %WHITE%╚════╝ ╚═╝╚══════╝╚══════╝╚══════╝                                                                                                                                                                                                                                                                                                             
+echo.
 echo.
 pause
 goto :eof
@@ -228,6 +243,8 @@ set "BRIGHT_RED=[91m"
 set "BRIGHT_GREEN=[92m"
 set "BRIGHT_BLUE=[94m"
 set "BRIGHT_CYAN=[96m"
+set "BRIGHT_YELLOW=[93m"
 set "WHITE=[97m"
 set "UNDERLINE=[4m"
 set "NO_UNDERLINE=[24m"
+set "BRIGHT_PURPLE=[38;5;207m"
