@@ -55,9 +55,22 @@ set "services_manual=ALG AppIDSvc AppMgmt AppReadiness AppXSvc Appinfo AxInstSV 
 set "services_auto=AudioEndpointBuilder AudioSrv Audiosrv BFE BrokerInfrastructure BthAvctpSvc BthHFSrv CDPUserSvc_dc2a4 CoreMessagingRegistrar CryptSvc DPS DcomLaunch Dhcp DispBrokerDesktopSvc Dnscache DusmSvc EventLog EventSystem FontCache KeyIso LSM LanmanServer LanmanWorkstation MpsSvc OneSyncSvc_dc2a4 Power ProfSvc RpcEptMapper RpcSs SENS SamSs Schedule SgrmBroker ShellHWDetection Spooler SysMain SystemEventsBroker TermService Themes TrkWks UserManager VGAuthService VMTools VaultSvc Wcmsvc WinDefend Winmgmt WlanSvc WpnUserService_dc2a4 gpsvc iphlpsvc mpssvc nsi tiledatamodelsvc webthreatdefusersvc_dc2a4"
 set "services_disabled=AJRouter AppVClient AssignedAccessManagerSvc DiagTrack DialogBlockingService MsKeyboardFilter NetTcpPortSharing RemoteAccess RemoteRegistry UevAgentService shpamsvc ssh-agent tzautoupdate uhssvc"
 
-for %%s in (%services_manual%) do sc config "%%s" start= demand && echo "%%s" set to %BRIGHT_YELLOW%Manual
-for %%s in (%services_auto%) do sc config "%%s" start= auto && echo "%%s" set to %BRIGHT_BLUE%Automatic
-for %%s in (%services_disabled%) do sc config "%%s" start= disabled && echo "%%s" set to %BRIGHT_RED%Disabled
+for %%s in (%services_manual%) do (
+    sc stop "%%s"
+    sc config "%%s" start= demand
+    echo "%%s" set to %BRIGHT_YELLOW%Manual
+)
+
+for %%s in (%services_auto%) do (
+    sc config "%%s" start= auto
+    echo "%%s" set to %BRIGHT_BLUE%Automatic
+)
+
+for %%s in (%services_disabled%) do (
+    sc stop "%%s"
+    sc config "%%s" start= disabled
+    echo "%%s" set to %BRIGHT_RED%Disabled
+)
 
 REM Disable Telemetry Tasks
 for %%t in (
