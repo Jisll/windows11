@@ -58,18 +58,18 @@ set "services_disabled=AJRouter AppVClient AssignedAccessManagerSvc DiagTrack Di
 for %%s in (%services_manual%) do (
     sc stop "%%s"
     sc config "%%s" start= demand
-    echo "%%s" set to %BRIGHT_YELLOW%Manual
+    echo "%%s" set to Manual
 )
 
 for %%s in (%services_auto%) do (
     sc config "%%s" start= auto
-    echo "%%s" set to %BRIGHT_BLUE%Automatic
+    echo "%%s" set to Automatic
 )
 
 for %%s in (%services_disabled%) do (
     sc stop "%%s"
     sc config "%%s" start= disabled
-    echo "%%s" set to %BRIGHT_RED%Disabled
+    echo "%%s" set to Disabled
 )
 
 REM Disable Telemetry Tasks
