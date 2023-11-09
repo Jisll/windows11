@@ -1,24 +1,15 @@
 @echo off
 cd /d "%~dp0"
 chcp 65001 >nul 2>&1
-mode con lines=24 cols=132
+mode con lines=24 cols=106
 setlocal enabledelayedexpansion
 title Perfect Windows
-color 0F
 call :Colors
 
-REM Check for Windows 10 Compatibility
-ver | find "10" >nul 2>&1
-if not %errorlevel% == 0 (
-    echo %BRIGHT_BLACK%Sorry, your system is not compatible with this tool%DARK_WHITE%
-    pause
-    exit
-)
-
 REM Check for Administrator Privileges
-openfiles 1>nul 2>&1
-if not %errorlevel% == 0 (
-    echo %BRIGHT_BLACK%To continue run this tool as %DARK_RED%administrator%DARK_WHITE%
+whoami /groups | findstr /i /c:"S-1-16-12288" >nul
+if %errorlevel% neq 0 (
+    echo %BRIGHT_BLACK%To continue, run this tool as %DARK_RED%administrator%DARK_WHITE%.
     pause
     exit
 )
@@ -33,16 +24,14 @@ echo  %WHITE%███████%BRIGHT_RED%╗%WHITE%██%BRIGHT_RED%║   
 echo  %BRIGHT_RED%╚════%WHITE%██%BRIGHT_RED%║%WHITE%██%BRIGHT_RED%║     %WHITE%██%BRIGHT_RED%╔══%WHITE%██%BRIGHT_RED%╗%WHITE%██%BRIGHT_RED%║%WHITE%██%BRIGHT_RED%╔═══╝    %WHITE%██%BRIGHT_RED%║       %WHITE%██%BRIGHT_BLUE%╔══%WHITE%██%BRIGHT_BLUE%╗  ╚%WHITE%██%BRIGHT_BLUE%╔╝      %WHITE%██   %WHITE%██%BRIGHT_CYAN%║%WHITE%██%BRIGHT_CYAN%║%BRIGHT_CYAN%╚════%WHITE%██%BRIGHT_CYAN%║%WHITE%██%BRIGHT_CYAN%║     %WHITE%██%BRIGHT_CYAN%║     
 echo  %WHITE%███████%BRIGHT_RED%║%BRIGHT_RED%╚%WHITE%██████%BRIGHT_RED%╗%WHITE%██%BRIGHT_RED%║  %WHITE%██%BRIGHT_RED%║%WHITE%██%BRIGHT_RED%║%WHITE%██%BRIGHT_RED%║        %WHITE%██%BRIGHT_RED%║       %WHITE%██████%BRIGHT_BLUE%╔╝   %WHITE%██%BRIGHT_BLUE%║       %BRIGHT_CYAN%╚%WHITE%█████%BRIGHT_CYAN%╔╝%WHITE%██%BRIGHT_CYAN%║%WHITE%███████%BRIGHT_CYAN%║%WHITE%███████%BRIGHT_CYAN%╗%WHITE%███████%BRIGHT_CYAN%╗
 echo  %BRIGHT_RED%╚══════╝ ╚═════╝╚═╝  ╚═╝╚═╝╚═╝        ╚═╝       %BRIGHT_BLUE%╚═════╝    ╚═╝        %BRIGHT_CYAN%╚════╝ ╚═╝╚══════╝╚══════╝╚══════╝                                                                                                                                                                                                                                                                                                             
-echo.
-echo.
 echo ══════════════════════════════════════════════════════════════
-echo.                           %BRIGHT_BLACK%Twitter @Jisllos%WHITE%
+echo.                                              %BRIGHT_BLACK%Twitter @Jisllos%WHITE%
 for /f "tokens=1,2,* delims=_ " %%A in ('"findstr /b /c:":Menu_" "%~f0""') do (
-    echo  !BRIGHT_GREEN!%%B !WHITE!%%C
+    echo  !BRIGHT_BLUE!%%B !WHITE!%%C
 )
 echo.
 set "choice="
-set /p choice=%DARK_WHITE%Choose an option to continue: %DARK_GREEN%
+set /p choice=%DARK_WHITE%Choose an option to continue: %BRIGHT_BLUE%
 if not defined choice goto :Main-Menu
 call :Menu_[%choice%] 2>nul || (echo %BRIGHT_BLACK%Invalid choice, please try again.%DARK_WHITE% & pause)
 goto :Main-Menu
@@ -51,25 +40,29 @@ REM Option 1: Perfect Windows
 :Menu_[1] Run Perfect Windows
 
 REM Services
-set "services_manual=ALG AppIDSvc AppMgmt AppReadiness AppXSvc Appinfo AxInstSV BDESVC BITS BTAGService BcastDVRUserService_dc2a4 BluetoothUserService_dc2a4 Browser CDPSvc COMSysApp CaptureService_dc2a4 CertPropSvc ClipSVC ConsentUxUserSvc_dc2a4 CredentialEnrollmentManagerUserSvc_dc2a4 CscService DcpSvc DevQueryBroker DeviceAssociationBrokerSvc_dc2a4 DeviceAssociationService DeviceInstall DevicePickerUserSvc_dc2a4 DevicesFlowUserSvc_dc2a4 DisplayEnhancementService DmEnrollmentSvc DoSvc DsSvc DsmSvc EFS EapHost EntAppSvc FDResPub Fax FrameServer FrameServerMonitor GraphicsPerfSvc HomeGroupListener HomeGroupProvider HvHost IEEtwCollectorService IKEEXT InstallService InventorySvc IpxlatCfgSvc KtmRm LicenseManager LxpSvc MSDTC MSiSCSI MapsBroker McpManagementService MessagingService_dc2a4 MicrosoftEdgeElevationService MixedRealityOpenXRSvc NPSMSvc_dc2a4 NaturalAuthentication NcaSvc NcbService NcdAutoSetup NetSetupSvc Netlogon Netman NgcCtnrSvc NgcSvc NlaSvc P9RdrService_dc2a4 PNRPAutoReg PNRPsvc PcaSvc PeerDistSvc PenService_dc2a4 PerfHost PhoneSvc PimIndexMaintenanceSvc_dc2a4 PlugPlay PolicyAgent PrintNotify PrintWorkflowUserSvc_dc2a4 PushToInstall QWAVE RasAuto RasMan RetailDemo RmSvc RpcLocator SCPolicySvc SCardSvr SDRSVC SEMgrSvc SNMPTRAP SNMPTrap SSDPSRV ScDeviceEnum SecurityHealthService Sense SensorDataService SensorService SensrSvc SessionEnv SharedAccess SharedRealitySvc SmsRouter SstpSvc StateRepository StiSvc StorSvc TabletInputService TapiSrv TextInputManagementService TieringEngineService TimeBroker TimeBrokerSvc TokenBroker TroubleshootingSvc TrustedInstaller UI0Detect UdkUserSvc_dc2a4 UmRdpService UnistoreSvc_dc2a4 UserDataSvc_dc2a4 UsoSvc VSS VacSvc W32Time WEPHOSTSVC WFDSConMgrSvc WMPNetworkSvc WManSvc WPDBusEnum WSService WSearch WaaSMedicSvc WalletService WarpJITSvc WbioSrvc WcsPlugInService WdNisSvc WdiServiceHost WdiSystemHost WebClient Wecsvc WerSvc WiaRpc WinHttpAutoProxySvc WinRM WpcMonSvc WpnService WwanSvc XblAuthManager XblGameSave XboxGipSvc XboxNetApiSvc autotimesvc bthserv camsvc cbdhsvc_dc2a4 cloudidsvc dcsvc defragsvc diagnosticshub.standardcollector.service diagsvc dmwappushservice dot3svc edgeupdate edgeupdatem embeddedmode fdPHost fhsvc hidserv icssvc lfsvc lltdsvc lmhosts msiserver netprofm p2pimsvc p2psvc perceptionsimulation pla seclogon smphost spectrum sppsvc svsvc swprv upnphost vds vm3dservice vmicguestinterface vmicheartbeat vmickvpexchange vmicrdv vmicshutdown vmictimesync vmicvmsession vmicvss vmvss wbengine wcncsvc webthreatdefsvc wercplsupport wisvc wlidsvc wlpasvc wmiApSrv workfolderssvc wscsvc wuauserv wudfsvc"
-set "services_auto=AudioEndpointBuilder AudioSrv Audiosrv BFE BrokerInfrastructure BthAvctpSvc BthHFSrv CDPUserSvc_dc2a4 CoreMessagingRegistrar CryptSvc DPS DcomLaunch Dhcp DispBrokerDesktopSvc Dnscache DusmSvc EventLog EventSystem FontCache KeyIso LSM LanmanServer LanmanWorkstation MpsSvc OneSyncSvc_dc2a4 Power ProfSvc RpcEptMapper RpcSs SENS SamSs Schedule SgrmBroker ShellHWDetection Spooler SysMain SystemEventsBroker TermService Themes TrkWks UserManager VGAuthService VMTools VaultSvc Wcmsvc WinDefend Winmgmt WlanSvc WpnUserService_dc2a4 gpsvc iphlpsvc mpssvc nsi tiledatamodelsvc webthreatdefusersvc_dc2a4"
-set "services_disabled=AJRouter AppVClient AssignedAccessManagerSvc DiagTrack DialogBlockingService MsKeyboardFilter NetTcpPortSharing RemoteAccess RemoteRegistry UevAgentService shpamsvc ssh-agent tzautoupdate uhssvc"
+set "services_manual=ALG AppIDSvc AppMgmt AppReadiness AppVClient AppXSvc Appinfo AxInstSV BDESVC BthAvctpSvc BthHFSrv CDPSvc CDPUserSvc_dc2a4 COMSysApp CaptureService_dc2a4 CertPropSvc ClipSVC ConsentUxUserSvc_dc2a4 CoreMessagingRegistrar CredentialEnrollmentManagerUserSvc_dc2a4 CscService DcpSvc DevQueryBroker DeviceAssociationBrokerSvc_dc2a4 DeviceAssociationService DeviceInstall DevicePickerUserSvc_dc2a4 DevicesFlowUserSvc_dc2a4 DiagTrack DialogBlockingService DispBrokerDesktopSvc DisplayEnhancementService DmEnrollmentSvc Dnscache DoSvc DsSvc DsmSvc DusmSvc EFS EapHost EntAppSvc EventLog EventSystem FDResPub Fax FontCache FrameServer FrameServerMonitor GraphicsPerfSvc IKEEXT InstallService InventorySvc IpxlatCfgSvc KeyIso KtmRm LanmanServer LanmanWorkstation LicenseManager LxpSvc MSDTC MSiSCSI MapsBroker McpManagementService MessagingService_dc2a4 MicrosoftEdgeElevationService MixedRealityOpenXRSvc MsKeyboardFilter NPSMSvc_dc2a4 NaturalAuthentication NcaSvc NcbService NcdAutoSetup NetSetupSvc Netlogon Netman NgcCtnrSvc NgcSvc NlaSvc OneSyncSvc_dc2a4 P9RdrService_dc2a4 PNRPAutoReg PNRPsvc PcaSvc PeerDistSvc PenService_dc2a4 PerfHost PhoneSvc PimIndexMaintenanceSvc_dc2a4 PlugPlay PolicyAgent PrintNotify PrintWorkflowUserSvc_dc2a4 ProfSvc PushToInstall QWAVE RasAuto RasMan RemoteAccess RemoteRegistry RetailDemo RmSvc RpcLocator SCardSvr SDRSVC SEMgrSvc SENS SNMPTrap SNMPTrap SSDPSRV SamSs ScDeviceEnum SecurityHealthService Sense SensorDataService SensorService SensrSvc SessionEnv SgrmBroker SharedAccess SharedRealitySvc ShellHWDetection SmsRouter Spooler SstpSvc StateRepository StiSvc StorSvc SystemEventsBroker TabletInputService TapiSrv TermService TextInputManagementService Themes TieringEngineService TimeBroker TimeBrokerSvc TokenBroker TrkWks TrustedInstaller UI0Detect UdkUserSvc_dc2a4 UserDataSvc_dc2a4 UserManager UsoSvc VSS VacSvc VaultSvc W32Time WEPHOSTSVC WFDSConMgrSvc WMPNetworkSvc WManSvc WPDBusEnum WSService WSearch WaaSMedicSvc WalletService WarpJITSvc WbioSrvc Wcmsvc WcsPlugInService WdNisSvc WdiServiceHost WdiSystemHost WebClient Wecsvc WerSvc WiaRpc WinDefend WinHttpAutoProxySvc Winmgmt WlanSvc WpcMonSvc WpnService WwanSvc XblAuthManager XblGameSave XboxGipSvc XboxNetApiSvc autotimesvc bthserv camsvc cbdhsvc_dc2a4 cloudidsvc dcsvc defragsvc diagnosticshub.standardcollector.service diagsvc dmwappushservice dot3svc edgeupdate edgeupdatem embeddedmode fdPHost fhsvc gpsvc hidserv icssvc iphlpsvc lfsvc lltdsvc lmhosts mpssvc msiserver netprofm nsi p2pimsvc p2psvc perceptionsimulation pla seclogon shpamsvc smphost spectrum sppsvc svsvc swprv tiledatamodelsvc tzautoupdate uhssvc upnphost vds vm3dservice vmicguestinterface vmicheartbeat vmickvpexchange vmicrdv vmicshutdown vmictimesync vmicvmsession vmicvss vmvss wbengine wcncsvc webthreatdefsvc webthreatdefusersvc_dc2a4 wercplsupport wisvc wlidsvc wlpasvc wmiApSrv workfolderssvc wscsvc wuauserv"
+set "services_auto=AudioEndpointBuilder AudioSrv Audiosrv BFE BITS BluetoothUserService_dc2a4 BrokerInfrastructure CryptSvc Dhcp DcomLaunch Dnscache DPS EventLog EventSystem HomeGroupListener HomeGroupProvider HvHost IkeEXT LanmanServer LanmanWorkstation LmHosts LSM MSiSCSI MpsSvc ProfSvc RpcEptMapper RpcSs SCardSvr Schedule SecurityHealthService ShellHWDetection Spooler SSDPSRV SamSs SysMain SystemEventsBroker Themes TokenBroker TrkWks TrustedInstaller UI0Detect UserManager VGAuthService VMTools VSS VaultSvc W32Time WebClient WerSvc WinDefend Winmgmt WlanSvc WpnUserService_dc2a4 XblAuthManager XblGameSave XboxGipSvc XboxNetApiSvc WinRM WudfSvc WSearch WaaSMedicSvc"
+set "services_disabled=AJRouter AssignedAccessManagerSvc DiagTrack DialogBlockingService RemoteAccess RemoteRegistry UevAgentService ssh-agent"
 
+echo Manual Services: 
 for %%s in (%services_manual%) do (
     sc stop "%%s"
     sc config "%%s" start= demand
-    echo "%%s" set to Manual
+    echo %%s set to Manual
 )
 
+echo Automatic Services: 
 for %%s in (%services_auto%) do (
+    sc stop "%%s"
     sc config "%%s" start= auto
-    echo "%%s" set to Automatic
+    echo %%s set to Automatic
 )
 
+echo Disabled Services: 
 for %%s in (%services_disabled%) do (
     sc stop "%%s"
     sc config "%%s" start= disabled
-    echo "%%s" set to Disabled
+    echo %%s set to Disabled
 )
 
 REM Disable Telemetry Tasks
@@ -97,11 +90,12 @@ bcdedit /set {current} bootmenupolicy Legacy
 
 REM Check Windows build version
 for /f "tokens=3" %%i in ('ver') do set "version=%%i"
-if %version% lss 22557 (
+set "version=!version:~1,-1!"
+if !version! lss 22557 (
     start "" taskmgr.exe
     :wait
-    timeout /t 1 >nul
-    tasklist /FI "IMAGENAME eq taskmgr.exe" | find /i "taskmgr.exe" >nul && (taskkill /f /im taskmgr.exe && goto :wait) || goto :continue
+    timeout /t 3 >nul
+    tasklist /FI "IMAGENAME eq taskmgr.exe" | find /i "taskmgr.exe" >nul && (taskkill /f /im taskmgr.exe && goto :wait)
 )
 
 :continue
@@ -116,8 +110,8 @@ reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\System" /v PublishUserActiviti
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\System" /v UploadUserActivities /t REG_DWORD /d 0 /f
 
 REM Delete Temporary Files
-del /q /s C:\Windows\Temp\*.* > nul
-del /q /s %TEMP%\*.* > nul
+rd /s /q C:\Windows\Temp rd /s /q %TEMP%
+rd /s /q C:\Windows\Prefetch del /q /s /f “%LocalAppData%\Microsoft\Windows\INetCache*.*” > nul rd /s /q %LocalAppData%\Microsoft\Windows\INetCache rd /s /q %SystemDrive%$Recycle.Bin
 
 REM Deny location access
 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\location" /v Value /t REG_SZ /d "Deny" /f
@@ -169,41 +163,50 @@ echo Tweaks applied successfully. Please restart your computer.
 echo Press ENTER to return to the start.
 pause >nul
 cls
-goto :eof
+goto :Main-Menu
 
 REM Option 2: Info
-:Menu_[I] Info
+:Menu_[2] Information
 cls
 echo.
-echo  %WHITE%██████%BRIGHT_PURPLE%╗ %WHITE%██%BRIGHT_PURPLE%╗   %WHITE%██%BRIGHT_PURPLE%╗         %WHITE%██%WHITE%╗%WHITE%██%WHITE%╗%WHITE%███████%WHITE%╗%WHITE%██%WHITE%╗     %WHITE%██%WHITE%╗     
-echo  %WHITE%██%BRIGHT_PURPLE%╔══%WHITE%██%BRIGHT_PURPLE%╗╚%WHITE%██%BRIGHT_PURPLE%╗ %WHITE%██%BRIGHT_PURPLE%╔╝         %WHITE%██%WHITE%║%WHITE%██%WHITE%║%WHITE%██%WHITE%╔════╝%WHITE%██%WHITE%║     %WHITE%██%WHITE%║     
-echo  %WHITE%██████%BRIGHT_PURPLE%╔╝ ╚%WHITE%████%BRIGHT_PURPLE%╔╝          %WHITE%██%WHITE%║%WHITE%██%WHITE%║%WHITE%███████%WHITE%╗%WHITE%██%WHITE%║     %WHITE%██%WHITE%║     
-echo  %WHITE%██%BRIGHT_PURPLE%╔══%WHITE%██%BRIGHT_PURPLE%╗  ╚%WHITE%██%BRIGHT_PURPLE%╔╝      %WHITE%██   %WHITE%██%WHITE%║%WHITE%██%WHITE%║%WHITE%╚════%WHITE%██%WHITE%║%WHITE%██%WHITE%║     %WHITE%██%WHITE%║     
-echo  %WHITE%██%WHITE%████%BRIGHT_PURPLE%╔╝   %WHITE%██%BRIGHT_PURPLE%║%WHITE%       ╚%WHITE%█████%WHITE%╔╝%WHITE%██%WHITE%║%WHITE%███████%WHITE%║%WHITE%███████%WHITE%╗%WHITE%███████%WHITE%╗
-echo  %BRIGHT_PURPLE%╚═════╝    ╚═╝        %WHITE%╚════╝ ╚═╝╚══════╝╚══════╝╚══════╝                                                                                                                                                                                                                                                                                                             
+echo %BRIGHT_BLUE%About Perfect Windows
 echo.
+echo %WHITE%Perfect Windows is a tool designed to optimize and tweak the settings of your Windows system. 
+echo %WHITE%It helps improve performance and security by modifying various system parameters. 
+echo.
+echo %DARK_RED%Use this tool at your own risk.
+echo.
+echo %BRIGHT_BLUE%Twitter:%WHITE% @Jisllos
+echo %BRIGHT_BLUE%GitHub:%WHITE% https://github.com/Jisllos/Perfect-Windows
 echo.
 pause
-goto :eof
+goto :Main-Menu
 
 REM Option 3: Exit
 :Menu_[E] Exit
 exit
 
+:Colors
+for /f "tokens=2 delims==" %%I in ('"wmic os get OSLanguage /value"') do set /a "lang=%%I"
+if %lang% neq 1031 exit /b
+
 REM Colors Definitions
 :Colors
+set "DARK_BLACK=[30m"
 set "DARK_RED=[31m"
 set "DARK_GREEN=[32m"
+set "DARK_YELLOW=[33m"
 set "DARK_BLUE=[34m"
+set "DARK_MAGENTA=[35m"
 set "DARK_CYAN=[36m"
 set "DARK_WHITE=[37m"
 set "BRIGHT_BLACK=[90m"
 set "BRIGHT_RED=[91m"
 set "BRIGHT_GREEN=[92m"
-set "BRIGHT_BLUE=[94m"
-set "BRIGHT_CYAN=[96m"
 set "BRIGHT_YELLOW=[93m"
+set "BRIGHT_BLUE=[94m"
+set "BRIGHT_MAGENTA=[95m"
+set "BRIGHT_CYAN=[96m"
+set "BRIGHT_WHITE=[97m"
 set "WHITE=[97m"
-set "UNDERLINE=[4m"
-set "NO_UNDERLINE=[24m"
-set "BRIGHT_PURPLE=[38;5;207m"
+exit /b
