@@ -44,28 +44,37 @@ set "services_manual=ALG AppIDSvc AppMgmt AppReadiness AppVClient AppXSvc AxInst
 set "services_auto=AudioEndpointBuilder AudioSrv Audiosrv BFE BluetoothUserService_dc2a4 BrokerInfrastructure CryptSvc Dhcp DcomLaunch Dnscache DPS EventLog EventSystem HomeGroupListener HomeGroupProvider HvHost IkeEXT LanmanServer LanmanWorkstation LmHosts LSM MSiSCSI MpsSvc ProfSvc RpcEptMapper SCardSvr Schedule SecurityHealthService Spooler SSDPSRV SamSs SysMain SystemEventsBroker TokenBroker TrkWks TrustedInstaller UI0Detect UserManager VGAuthService VMTools VSS VaultSvc W32Time WebClient WerSvc WinDefend Winmgmt WlanSvc WpnUserService_dc2a4 XblAuthManager XblGameSave XboxGipSvc XboxNetApiSvc WinRM WudfSvc WSearch WaaSMedicSvc"
 set "services_disabled=AJRouter AssignedAccessManagerSvc DiagTrack DialogBlockingService RemoteAccess RemoteRegistry UevAgentService ssh-agent"
 
-echo Manual Services: 
+echo Adjusting Service Settings...
+echo Setting Manual Services: 
 for %%s in (%services_manual%) do (
+    echo Stopping %%s...
     sc stop "%%s"
+    echo Configuring %%s to start manually...
     sc config "%%s" start= demand
-    echo %%s set to Manual
+    echo Successfully set %%s to Manual
 )
 
-echo Automatic Services: 
+echo Setting Automatic Services: 
 for %%s in (%services_auto%) do (
+    echo Stopping %%s...
     sc stop "%%s"
+    echo Configuring %%s to start automatically...
     sc config "%%s" start= auto
-    echo %%s set to Automatic
+    echo Successfully set %%s to Automatic
 )
 
-echo Disabled Services: 
+echo Setting Disabled Services: 
 for %%s in (%services_disabled%) do (
+    echo Stopping %%s...
     sc stop "%%s"
+    echo Disabling %%s...
     sc config "%%s" start= disabled
-    echo %%s set to Disabled
+    echo Successfully set %%s to Disabled
 )
+echo All service settings have been successfully adjusted.
 
 REM Disable Telemetry Tasks
+echo Disable Telemetry Tasks
 for %%t in (
     "Microsoft\Windows\Application Experience\Microsoft Compatibility Appraiser"
     "Microsoft\Windows\Application Experience\ProgramDataUpdater"
@@ -79,6 +88,7 @@ for %%t in (
 ) do schtasks /Change /TN "%%t" /Disable
 
 REM Disable Telemetry via Registry
+echo Disable Telemetry via Registry
 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\DataCollection" /v AllowTelemetry /t REG_DWORD /d 0 /f
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\DataCollection" /v AllowTelemetry /t REG_DWORD /d 0 /f
 reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /v ContentDeliveryAllowed /t REG_DWORD /d 0 /f
@@ -86,9 +96,12 @@ reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" 
 reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /v PreInstalledAppsEnabled /t REG_DWORD /d 0 /f
 
 REM Change boot menu policy to Legacy
+echo Changing boot menu policy to Legacy mode...
 bcdedit /set {current} bootmenupolicy Legacy
+echo Boot menu policy has been successfully changed to Legacy mode.
 
 REM Check Windows build version
+echo Check Windows build version
 for /f "tokens=3" %%i in ('ver') do set "version=%%i"
 set "version=!version:~1,-1!"
 if !version! lss 22557 (
@@ -101,25 +114,30 @@ if !version! lss 22557 (
 :continue
 
 REM Disable Wi-Fi Sense
+echo Disable Wi-Fi Sense
 reg add "HKLM\Software\Microsoft\PolicyManager\default\WiFi\AllowWiFiHotSpotReporting" /v Value /t REG_DWORD /d 0 /f
 reg add "HKLM\Software\Microsoft\PolicyManager\default\WiFi\AllowAutoConnectToWiFiSenseHotspots" /v Value /t REG_DWORD /d 0 /f
 
 REM Disable Activity Feed
+echo Disable Activity Feed
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\System" /v EnableActivityFeed /t REG_DWORD /d 0 /f
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\System" /v PublishUserActivities /t REG_DWORD /d 0 /f
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\System" /v UploadUserActivities /t REG_DWORD /d 0 /f
 
 REM Delete Temporary Files
+echo Delete Temporary Files
 rd /s /q C:\Windows\Temp rd /s /q %TEMP%
 rd /s /q C:\Windows\Prefetch del /q /s /f “%LocalAppData%\Microsoft\Windows\INetCache*.*” > nul rd /s /q %LocalAppData%\Microsoft\Windows\INetCache rd /s /q %SystemDrive%$Recycle.Bin
 
 REM Deny location access
+echo Deny location access
 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\location" /v Value /t REG_SZ /d "Deny" /f
 reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Sensor\Overrides\{BFA794E4-F964-4FDB-90F6-51056BFE4B44}" /v SensorPermissionState /t REG_DWORD /d 0 /f
 reg add "HKLM\SYSTEM\CurrentControlSet\Services\lfsvc\Service\Configuration" /v Status /t REG_DWORD /d 0 /f
 reg add "HKLM\SYSTEM\Maps" /v AutoUpdateEnabled /t REG_DWORD /d 0 /f
 
 REM Stop HomeGroup Services
+echo Stop HomeGroup Services
 net stop "HomeGroupListener"
 net stop "HomeGroupProvider"
 sc config HomeGroupListener start= demand
@@ -127,14 +145,17 @@ sc config HomeGroupProvider start= demand
 reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\HomeGroup" /v "DisableHomeGroup" /t REG_DWORD /d 1 /f
 
 REM Disable Storage Sense
+echo Disable Storage Sense
 reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\StorageSense" /v "StorageSenseGlobal" /t REG_DWORD /d 0 /f
 
 REM Disable Hibernate
+echo Disable Hibernate
 reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Power" /v "HibernateEnabled" /t REG_DWORD /d 0 /f
 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\FlyoutMenuSettings" /v "ShowHibernateOption" /t REG_DWORD /d 0 /f
 powercfg.exe /hibernate off
 
-REM Disable Game DVR
+REM Disable GameDVR
+echo Disable GameDVR
 reg add "HKCU\System\GameConfigStore" /v "GameDVR_FSEBehavior" /t REG_DWORD /d 2 /f
 reg add "HKCU\System\GameConfigStore" /v "GameDVR_Enabled" /t REG_DWORD /d 0 /f
 reg add "HKCU\System\GameConfigStore" /v "GameDVR_DXGIHonorFSEWindowsCompatible" /t REG_DWORD /d 1 /f
@@ -143,24 +164,28 @@ reg add "HKCU\System\GameConfigStore" /v "GameDVR_EFSEFeatureFlags" /t REG_DWORD
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\GameDVR" /v "AllowGameDVR" /t REG_DWORD /d 0 /f
 
 REM Disable Power Throttling
+echo Disable Power Throttling
 reg add "HKLM\SYSTEM\CurrentControlSet\Control\Power\PowerThrottling" /v "PowerThrottlingOff" /t REG_DWORD /d 1 /f
 reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Power" /v "HiberbootEnabled" /t REG_DWORD /d 0 /f
 
 REM Change Keyboard Indicator Behavior
+echo Change Keyboard Indicator Behavior
 reg add "HKU\.DEFAULT\Control Panel\Keyboard" /v "InitialKeyboardIndicators" /t REG_DWORD /d 0 /f
 
 REM Show File Extensions
+echo Show File Extensions
 reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\Advanced" /v "HideFileExt" /t REG_DWORD /d 0 /f
 
 REM Disable User Account Control (UAC)
+echo Disable User Account Control
 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\System" /v "ConsentPromptBehaviorAdmin" /t REG_DWORD /d 0 /f
 
 REM Disable Cortana
+echo Disable Cortana
 powershell -Command "Get-AppxPackage -allusers Microsoft.549981C3F5F10 | Remove-AppxPackage"
 
-cls
-echo Tweaks applied successfully. Please restart your computer.
-echo Press ENTER to return to the start.
+echo All tweaks have been successfully applied! For the changes to take effect, please restart your computer.
+echo Press ENTER to return to the main menu.
 pause >nul
 cls
 goto :Main-Menu
@@ -169,15 +194,17 @@ REM Option 2: Info
 :Menu_[2] Information
 cls
 echo.
-echo %BRIGHT_BLUE%About Perfect Windows
+echo %BRIGHT_BLUE%Welcome to Perfect Windows!
 echo.
-echo %WHITE%Perfect Windows is a tool designed to optimize and tweak the settings of your Windows system. 
-echo %WHITE%It helps improve performance and security by modifying various system parameters. 
+echo %WHITE%Perfect Windows is a meticulously tool that aims to enhance your Windows performance and security.
+echo %WHITE%It achieves this by fine-tuning various system parameters to optimize your system's settings.
 echo.
-echo %DARK_RED%Use this tool at your own risk.
+echo %DARK_RED%Please note: While we strive to ensure the highest quality, use of this tool is at your own discretion.
+echo %DARK_RED%Always ensure you have a backup of your system.
 echo.
-echo %BRIGHT_BLUE%Twitter:%WHITE% @Jisllos
-echo %BRIGHT_BLUE%GitHub:%WHITE% https://github.com/Jisllos/Perfect-Windows
+echo %BRIGHT_BLUE%Stay Connected:
+echo %WHITE%Follow us on Twitter for updates and more: @Jisllos
+echo %WHITE%Contribute or report issues on GitHub: https://github.com/Jisllos/Perfect-Windows
 echo.
 pause
 goto :Main-Menu
