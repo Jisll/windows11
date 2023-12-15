@@ -101,14 +101,20 @@ bcdedit /set {current} bootmenupolicy Legacy
 echo Boot menu policy has been successfully changed to Legacy mode.
 
 REM Check Windows build version
-echo Check Windows build version
-for /f "tokens=3" %%i in ('ver') do set "version=%%i"
-set "version=!version:~1,-1!"
-if !version! lss 22557 (
+echo Checking Windows build version...
+for /f "tokens=2 delims=[]" %%i in ('ver') do for /f "tokens=2 delims=." %%j in ("%%i") do set "version=%%j"
+if %version% lss 22557 (
+    echo Version is less than 22557. Starting Task Manager...
     start "" taskmgr.exe
-    :wait
     timeout /t 3 >nul
-    tasklist /FI "IMAGENAME eq taskmgr.exe" | find /i "taskmgr.exe" >nul && (taskkill /f /im taskmgr.exe && goto :wait)
+    :wait
+    tasklist /FI "IMAGENAME eq taskmgr.exe" | find /i "taskmgr.exe" >nul && (
+        echo Task Manager is running. Attempting to kill it...
+        taskkill /f /im taskmgr.exe
+        goto :wait
+    )
+) else (
+    echo Version is not less than 22557. No action needed.
 )
 
 :continue
