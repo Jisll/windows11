@@ -190,6 +190,7 @@ REM Disable Cortana
 echo Disable Cortana
 powershell -Command "Get-AppxPackage -allusers Microsoft.549981C3F5F10 | Remove-AppxPackage"
 
+cls
 echo All tweaks have been successfully applied! For the changes to take effect, please restart your computer.
 echo Press ENTER to return to the main menu.
 pause >nul
