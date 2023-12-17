@@ -40,25 +40,32 @@ REM Option 1: Perfect Windows
 :Menu_[1] Run Perfect Windows
 
 REM Services
-set "services_manual=ALG AppIDSvc Appinfo AppMgmt AppVClient AppXSvc AxInstSV BDESVC BFE BITS BluetoothUserService_dc2a4 BcastDVRUserService_dc2a4 BluetoothUserService_dc2a4 Browser CDPUserSvc_dc2a4 COMSysApp CaptureService_dc2a4 CertPropSvc ClipSVC ConsentUxUserSvc_dc2a4 CoreMessagingRegistrar CredentialEnrollmentManagerUserSvc_dc2a4 CryptSvc CscService DcomLaunch DcpSvc DevQueryBroker DeviceAssociationBrokerSvc_dc2a4 DeviceAssociationService DeviceInstall DevicePickerUserSvc_dc2a4 DevicesFlowUserSvc_dc2a4 Dhcp DiagTrack DialogBlockingService DispBrokerDesktopSvc DisplayEnhancementService DmEnrollmentSvc Dnscache DoSvc DsSvc DsmSvc DusmSvc EFS EapHost EntAppSvc EventLog EventSystem FDResPub Fax FontCache FrameServer FrameServerMonitor GraphicsPerfSvc HomeGroupListener HomeGroupProvider HvHost IEEtwCollectorService IKEEXT InstallService InventorySvc IpxlatCfgSvc KeyIso KtmRm LSM LanmanServer LanmanWorkstation LicenseManager LxpSvc MSDTC MSiSCSI MapsBroker McpManagementService MessagingService_dc2a4 MicrosoftEdgeElevationService MixedRealityOpenXRSvc MpsSvc MsKeyboardFilter NPSMSvc_dc2a4 NaturalAuthentication NcaSvc NcbService NcdAutoSetup NetSetupSvc NetTcpPortSharing Netlogon Netman NgcCtnrSvc NgcSvc NlaSvc OneSyncSvc P9RdrService_dc2a4 PNRPAutoReg PNRPsvc PcaSvc PeerDistSvc PenService_dc2a4 PerfHost PhoneSvc PimIndexMaintenanceSvc_dc2a4 PlugPlay PolicyAgent Power PrintNotify PrintWorkflowUserSvc_dc2a4 ProfSvc PushToInstall QWAVE RasAuto RasMan RemoteAccess RemoteRegistry RetailDemo RmSvc RpcEptMapper RpcLocator RpcSs SCPolicySvc SCardSvr SDRSVC SEMgrSvc SENS SNMPTRAP SNMPTrap SSDPSRV SamSs ScDeviceEnum Schedule SecurityHealthService Sense SensorDataService SensorService SensrSvc SessionEnv SgrmBroker SharedAccess SharedRealitySvc ShellHWDetection SmsRouter Spooler SstpSvc StateRepository StiSvc StorSvc SysMain SystemEventsBroker TabletInputService TapiSrv TextInputManagementService Themes TieringEngineService TimeBroker TimeBrokerSvc TokenBroker TrkWks TroubleshootingSvc TrustedInstaller UI0Detect UdkUserSvc_dc2a4 UevAgentService UmRdpService UnistoreSvc_dc2a4 UserDataSvc_dc2a4 UserManager UsoSvc VGAuthService VMTools VSS VacSvc VaultSvc W32Time WEPHOSTSVC WFDSConMgrSvc WMPNetworkSvc WManSvc WPDBusEnum WSService WSearch WaaSMedicSvc WalletService WarpJITSvc WbioSrvc Wcmsvc WcsPlugInService WdiServiceHost WdiSystemHost WebClient Wecsvc WerSvc WiaRpc WinDefend WinHttpAutoProxySvc WinRM Winmgmt WlanSvc WpcMonSvc WpnService WpnUserService_dc2a4 WwanSvc XblAuthManager XblGameSave XboxGipSvc XboxNetApiSvc autotimesvc bthserv camsvc cbdhsvc_dc2a4 cloudidsvc dcsvc defragsvc diagnosticshub.standardcollector.service diagsvc dmwappushservice dot3svc edgeupdate edgeupdatem embeddedmode fdPHost fhsvc gpsvc hidserv icssvc iphlpsvc lfsvc lltdsvc lmhosts mpssvc msiserver netprofm nsi p2pimsvc p2psvc perceptionsimulation pla seclogon shpamsvc smphost spectrum sppsvc ssh-agent svsvc swprv tiledatamodelsvc tzautoupdate uhssvc upnphost vds vm3dservice vmicguestinterface vmicheartbeat vmickvpexchange vmicrdv vmicshutdown vmictimesync vmicvmsession vmicvss vmvss wbengine wcncsvc webthreatdefsvc webthreatdefusersvc_dc2a4 wercplsupport wisvc wlidsvc wlpasvc wmiApSrv workfolderssvc wscsvc wuauserv wudfsvc"
-set "services_auto=BFE BITS BrokerInfrastructure CryptSvc DcomLaunch Dhcp DPS EventLog EventSystem LanmanServer LanmanWorkstation MSMQ Netlogon ProfSvc RpcEptMapper RpcLocator RpcSs SamSs SENS SysMain Themes UserManager Windows Time WinDefend Winmgmt WinRM"
-set "services_disabled=AJRouter AppVClient AssignedAccessManagerSvc DiagTrack DialogBlockingService MicrosoftEdgeElevationService RemoteAccess RemoteRegistry RetailDemo UevAgentService autotimesvc ssh-agent"
+set services_auto=AudioEndpointBuilder Audiosrv BITS BFE BluetoothUserService_dc2a4 BrokerInfrastructure Browser BthAvctpSvc BthHFSrv CaptureService_dc2a4 CDPUserSvc_dc2a4 COMSysApp CoreMessagingRegistrar CredentialEnrollmentManagerUserSvc_dc2a4 CryptSvc DPS Dhcp Dnscache DoSvc DsmSvc DusmSvc EapHost EventLog EventSystem FrameServer GraphicsPerfSvc HvHost IKEEXT LanmanServer LanmanWorkstation LicenseManager MMCSS MpsSvc NaturalAuthentication NgcCtnrSvc NgcSvc NlaSvc OneSyncSvc_dc2a4 ProfSvc Power PrintWorkflowUserSvc_dc2a4 RasAuto RasMan RemoteRegistry RpcEptMapper RpcLocator RpcSs SamSs Schedule SecurityHealthService SENS ShellHWDetection Spooler SSDPSRV SysMain TabletInputService Themes UsoSvc VGAuthService VMTools VSS WebClient WdiServiceHost WinDefend WlanSvc WpnUserService_dc2a4 XblAuthManager XboxNetApiSvc bthserv gpsvc iphlpsvc mpssvc nsi p2psvc perceptionsimulation sppsvc svsvc tzautoupdate vds webthreatdefusersvc_dc2a4 wscsvc
+set services_disabled=AJRouter AppVClient DiagTrack DialogBlockingService DistributedLinkTrackingService EdgeUpdate edgeupdatem embeddedmode hidserv shpamsvc spectrum ssh-agent uhssvc wercplsupport webthreatdefsvc wuauserv
+set services_autodelay=BITS DoSvc WSearch wscsvc
 
 echo !BRIGHT_WHITE!Adjusting Service Settings...
-echo !BRIGHT_WHITE!Setting Manual Services: 
-for %%s in (%services_manual%) do (
-    echo !DARK_YELLOW!Configuring %%s to start manually...
-    sc config "%%s" start= demand
-    echo Successfully set %%s to Manual
+echo !BRIGHT_WHITE!Setting All Services to Manual: 
+for /f "tokens=1,2" %%a in ('sc query state^= all ^| find "SERVICE_NAME:"') do (
+    echo !DARK_YELLOW!Configuring %%b to start manually...
+    sc config "%%b" start= demand
+    echo Successfully set %%b to Manual
 )
-echo !BRIGHT_WHITE!Setting Automatic Services: 
+
+echo !BRIGHT_WHITE!Setting Important Services to Automatic: 
 for %%s in (%services_auto%) do (
-    echo !DARK_BLUE!Stopping %%s...
-    sc stop "%%s"
-    echo Configuring %%s to start automatically...
+    echo !DARK_BLUE!Configuring %%s to start automatically...
     sc config "%%s" start= auto
     echo Successfully set %%s to Automatic
 )
+
+echo !BRIGHT_WHITE!Setting AutomaticDelayedStart Services: 
+for %%s in (%services_autodelay%) do (
+    echo !DARK_GREEN!Configuring %%s to start automatically with delay...
+    sc config "%%s" start= delayed-auto
+    echo Successfully set %%s to AutomaticDelayedStart
+)
+
 echo !BRIGHT_WHITE!Setting Disabled Services: 
 for %%s in (%services_disabled%) do (
     echo !DARK_RED!Disabling %%s...
