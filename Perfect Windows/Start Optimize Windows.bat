@@ -44,31 +44,31 @@ set "services_manual=ALG AppIDSvc Appinfo AppMgmt AppVClient AppXSvc AxInstSV BD
 set "services_auto=BFE BITS BrokerInfrastructure CryptSvc DcomLaunch Dhcp DPS EventLog EventSystem LanmanServer LanmanWorkstation MSMQ Netlogon ProfSvc RpcEptMapper RpcLocator RpcSs SamSs SENS SysMain Themes UserManager Windows Time WinDefend Winmgmt WinRM"
 set "services_disabled=AJRouter AppVClient AssignedAccessManagerSvc DiagTrack DialogBlockingService MicrosoftEdgeElevationService RemoteAccess RemoteRegistry RetailDemo UevAgentService autotimesvc ssh-agent"
 
-echo Adjusting Service Settings...
-echo Setting Manual Services: 
+echo !BRIGHT_WHITE!Adjusting Service Settings...
+echo !BRIGHT_WHITE!Setting Manual Services: 
 for %%s in (%services_manual%) do (
-    echo Configuring %%s to start manually...
+    echo !DARK_YELLOW!Configuring %%s to start manually...
     sc config "%%s" start= demand
     echo Successfully set %%s to Manual
 )
-echo Setting Automatic Services: 
+echo !BRIGHT_WHITE!Setting Automatic Services: 
 for %%s in (%services_auto%) do (
-    echo Stopping %%s...
+    echo !DARK_BLUE!Stopping %%s...
     sc stop "%%s"
     echo Configuring %%s to start automatically...
     sc config "%%s" start= auto
     echo Successfully set %%s to Automatic
 )
-echo Setting Disabled Services: 
+echo !BRIGHT_WHITE!Setting Disabled Services: 
 for %%s in (%services_disabled%) do (
-    echo Disabling %%s...
+    echo !DARK_RED!Disabling %%s...
     sc config "%%s" start= disabled
     echo Successfully set %%s to Disabled
 )
-echo All service settings have been successfully adjusted.
+echo !BRIGHT_WHITE!All service settings have been successfully adjusted.
 
 REM Disable Scheduled Tasks
-echo Disable Scheduled Tasks
+echo !BRIGHT_WHITE!Disable Scheduled Tasks
 schtasks /change /tn "Microsoft\Windows\Application Experience\Microsoft Compatibility Appraiser" /disable
 schtasks /change /tn "Microsoft\Windows\Application Experience\ProgramDataUpdater" /disable
 schtasks /change /tn "Microsoft\Windows\Autochk\Proxy" /disable
@@ -84,7 +84,7 @@ schtasks /change /tn "Microsoft\Windows\Application Experience\PcaPatchDbTask" /
 schtasks /change /tn "Microsoft\Windows\Maps\MapsUpdateTask" /disable
 
 REM Disable Telemetry via Registry
-echo Disable Telemetry via Registry
+echo !BRIGHT_WHITE!Disable Telemetry via Registry
 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\DataCollection" /v AllowTelemetry /t REG_DWORD /d "0" /f
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\DataCollection" /v AllowTelemetry /t REG_DWORD /d "0" /f
 reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /v ContentDeliveryAllowed /t REG_DWORD /d "0" /f
@@ -126,17 +126,17 @@ reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProf
 reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games" /v Scheduling Category /t REG_SZ /d "High" /f
 
 REM Change boot menu policy to Legacy
-echo Changing boot menu policy to Legacy mode...
+echo !BRIGHT_WHITE!Changing boot menu policy to Legacy mode...
 bcdedit /set {current} bootmenupolicy Legacy
-echo Boot menu policy has been successfully changed to Legacy mode.
+echo !BRIGHT_WHITE!Boot menu policy has been successfully changed to Legacy mode.
 
 REM Check Windows version before executing additional commands
-echo Check Windows version before executing additional commands...
+echo !BRIGHT_WHITE!Check Windows version before executing additional commands...
 ver | find "Version 10.0." > nul
 if errorlevel 1 goto :eof
 
 REM Modify Task Manager settings for Windows versions older than 22557
-echo Modify Task Manager settings for Windows versions older than 22557...
+echo !BRIGHT_WHITE!Modify Task Manager settings for Windows versions older than 22557...
 set taskmgr=""
 for /f "tokens=2 delims= " %%v in ('reg query "HKCU\Software\Microsoft\Windows\CurrentVersion\TaskManager" /v Preferences ^| find Preferences') do set taskmgr=%%v
 if %taskmgr% lss 22557 (
@@ -153,12 +153,12 @@ if %taskmgr% lss 22557 (
 )
 
 REM Group svchost.exe processes
-echo Group svchost.exe processes...
+echo !BRIGHT_WHITE!Group svchost.exe processes...
 for /f "tokens=1,2,*" %%a in ('wmic memorychip get capacity ^| find /i " " ^| find "."') do set ram=%%c
 reg add "HKLM\SYSTEM\CurrentControlSet\Control" /v SvcHostSplitThresholdInKB /t REG_DWORD /d %ram% /f
 
 REM Delete AutoLogger-Diagtrack-Listener.etl and deny permissions
-echo Delete AutoLogger-Diagtrack-Listener.etl and deny permissions...
+echo !BRIGHT_WHITE!Delete AutoLogger-Diagtrack-Listener.etl and deny permissions...
 set "autoLoggerDir=%PROGRAMDATA%\Microsoft\Diagnosis\ETLLogs\AutoLogger"
 if exist "%autoLoggerDir%\AutoLogger-Diagtrack-Listener.etl" (
     del "%autoLoggerDir%\AutoLogger-Diagtrack-Listener.etl"
@@ -167,30 +167,30 @@ icacls "%autoLoggerDir%" /deny SYSTEM:(OI)(CI)F
 :continue
 
 REM Disable Wi-Fi Sense
-echo Disable Wi-Fi Sense
+echo !BRIGHT_WHITE!Disable Wi-Fi Sense
 reg add "HKLM\Software\Microsoft\PolicyManager\default\WiFi\AllowWiFiHotSpotReporting" /v Value /t REG_DWORD /d 0 /f
 reg add "HKLM\Software\Microsoft\PolicyManager\default\WiFi\AllowAutoConnectToWiFiSenseHotspots" /v Value /t REG_DWORD /d 0 /f
 
 REM Disable Activity Feed
-echo Disable Activity Feed
+echo !BRIGHT_WHITE!Disable Activity Feed
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\System" /v EnableActivityFeed /t REG_DWORD /d 0 /f
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\System" /v PublishUserActivities /t REG_DWORD /d 0 /f
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\System" /v UploadUserActivities /t REG_DWORD /d 0 /f
 
 REM Delete Temporary Files
-echo Delete Temporary Files
+echo !BRIGHT_WHITE!Delete Temporary Files
 rd /s /q C:\Windows\Temp rd /s /q %TEMP%
 rd /s /q C:\Windows\Prefetch del /q /s /f “%LocalAppData%\Microsoft\Windows\INetCache*.*” > nul rd /s /q %LocalAppData%\Microsoft\Windows\INetCache rd /s /q %SystemDrive%$Recycle.Bin
 
 REM Deny location access
-echo Deny location access
+echo !BRIGHT_WHITE!Deny location access
 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\location" /v Value /t REG_SZ /d "Deny" /f
 reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Sensor\Overrides\{BFA794E4-F964-4FDB-90F6-51056BFE4B44}" /v SensorPermissionState /t REG_DWORD /d 0 /f
 reg add "HKLM\SYSTEM\CurrentControlSet\Services\lfsvc\Service\Configuration" /v Status /t REG_DWORD /d 0 /f
 reg add "HKLM\SYSTEM\Maps" /v AutoUpdateEnabled /t REG_DWORD /d 0 /f
 
 REM Stop HomeGroup Services
-echo Stop HomeGroup Services
+echo !BRIGHT_WHITE!Stop HomeGroup Services
 net stop "HomeGroupListener"
 net stop "HomeGroupProvider"
 sc config HomeGroupListener start= demand
@@ -198,17 +198,17 @@ sc config HomeGroupProvider start= demand
 reg add "HKEY_LOCAL_MACHINE\SOFTWARE\Policies\Microsoft\Windows\HomeGroup" /v DisableHomeGroup /t REG_DWORD /d 1 /f
 
 REM Disable Storage Sense
-echo Disable Storage Sense
+echo !BRIGHT_WHITE!Disable Storage Sense
 reg delete "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy" /f
 
 REM Disable Hibernate
-echo Disable Hibernate
+echo !BRIGHT_WHITE!Disable Hibernate
 reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Power" /v HibernateEnabled /t REG_DWORD /d 0 /f
 reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\FlyoutMenuSettings" /v ShowHibernateOption /t REG_DWORD /d 0 /f
 powercfg.exe /hibernate off
 
 REM Disable GameDVR
-echo Disable GameDVR
+echo !BRIGHT_WHITE!Disable GameDVR
 reg add "HKCU\System\GameConfigStore" /v GameDVR_FSEBehavior /t REG_DWORD /d 2 /f
 reg add "HKCU\System\GameConfigStore" /v GameDVR_Enabled /t REG_DWORD /d 0 /f
 reg add "HKCU\System\GameConfigStore" /v GameDVR_DXGIHonorFSEWindowsCompatible /t REG_DWORD /d 1 /f
@@ -217,8 +217,8 @@ reg add "HKCU\System\GameConfigStore" /v GameDVR_EFSEFeatureFlags /t REG_DWORD /
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\GameDVR" /v AllowGameDVR /t REG_DWORD /d 0 /f
 
 cls
-echo All tweaks have been successfully applied! For the changes to take effect, please restart your computer.
-echo Press ENTER to return to the main menu.
+echo !BRIGHT_WHITE!All tweaks have been successfully applied! For the changes to take effect, please restart your computer.
+echo Press !DARK_MAGENTA!ENTER !BRIGHT_WHITE!to return to the main menu.
 pause >nul
 cls
 goto :Main-Menu
