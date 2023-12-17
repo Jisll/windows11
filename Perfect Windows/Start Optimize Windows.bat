@@ -1,7 +1,7 @@
 @echo off
 cd /d "%~dp0"
 chcp 65001 >nul 2>&1
-mode con lines=24 cols=106
+mode con lines=30 cols=136
 setlocal enabledelayedexpansion
 title Perfect Windows
 call :Colors
@@ -26,9 +26,9 @@ echo  %WHITE%███████%BRIGHT_RED%║%BRIGHT_RED%╚%WHITE%███
 echo  %BRIGHT_RED%╚══════╝ ╚═════╝╚═╝  ╚═╝╚═╝╚═╝        ╚═╝       %BRIGHT_BLUE%╚═════╝    ╚═╝        %BRIGHT_CYAN%╚════╝ ╚═╝╚══════╝╚══════╝╚══════╝                                                                                                                                                                                                                                                                                                             
 echo ══════════════════════════════════════════════════════════════
 echo.                                              %BRIGHT_BLACK%Twitter @Jisllos%WHITE%
-for /f "tokens=1,2,* delims=_ " %%A in ('"findstr /b /c:":Menu_" "%~f0""') do (
-    echo  !BRIGHT_BLUE!%%B !WHITE!%%C
-)
+echo  %BRIGHT_BLUE%1%BRIGHT_WHITE%: Run Perfect Windows
+echo  %BRIGHT_BLUE%2%BRIGHT_WHITE%: Information
+echo  %BRIGHT_RED%E%BRIGHT_WHITE%: Exit
 echo.
 set "choice="
 set /p choice=%DARK_WHITE%Choose an option to continue: !BRIGHT_BLUE!
@@ -230,34 +230,30 @@ pause >nul
 cls
 goto :Main-Menu
 
-REM Option 2: Info
+REM Option 2: Information
 :Menu_[2] Information
 cls
 echo.
-echo %BRIGHT_BLUE%Welcome to Perfect Windows!
+echo %BRIGHT_BLUE%Welcome to Perfect Windows - Your Ultimate Performance Enhancer!
 echo.
-echo %WHITE%Perfect Windows is a meticulously tool that aims to enhance your Windows performance and security.
-echo %WHITE%It achieves this by fine-tuning various system parameters to optimize your system's settings.
+echo %WHITE%Perfect Windows is a meticulously crafted tool, designed with the sole aim of elevating your Windows experience to new heights.
+echo %WHITE%It does so by fine-tuning various system parameters, optimizing your system's settings to deliver peak performance and robust security.
 echo.
-echo %DARK_RED%Please note: While we strive to ensure the highest quality, use of this tool is at your own discretion.
-echo %DARK_RED%Always ensure you have a backup of your system.
+echo %DARK_RED%Disclaimer: We strive to ensure the highest quality and reliability. However, the use of this tool is at your own discretion.
+echo %DARK_RED%We strongly recommend maintaining a backup of your system for safety.
 echo.
 echo %BRIGHT_BLUE%Stay Connected:
-echo %WHITE%Follow us on Twitter for updates and more: @Jisllos
-echo %WHITE%Contribute or report issues on GitHub: https://github.com/Jisllos/Perfect-Windows
+echo %WHITE%For updates, insights and more, follow us on Twitter: @Jisllos
+echo %WHITE%To contribute or report issues, visit our GitHub page: https://github.com/Jisllos/Perfect-Windows
 echo.
 pause
 goto :Main-Menu
 
-REM Option 3: Exit
+REM Option E: Exit
 :Menu_[E] Exit
 exit
 
-:Colors
-for /f "tokens=2 delims==" %%I in ('"wmic os get OSLanguage /value"') do set /a "lang=%%I"
-if %lang% neq 1031 exit /b
-
-REM Colors Definitions
+REM Colors
 :Colors
 set "DARK_BLACK=[30m"
 set "DARK_RED=[31m"
@@ -277,3 +273,4 @@ set "BRIGHT_CYAN=[96m"
 set "BRIGHT_WHITE=[97m"
 set "WHITE=[97m"
 exit /b
+:EOF
