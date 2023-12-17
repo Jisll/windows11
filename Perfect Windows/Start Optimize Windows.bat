@@ -244,7 +244,7 @@ echo %DARK_RED%We strongly recommend maintaining a backup of your system for saf
 echo.
 echo %BRIGHT_BLUE%Stay Connected:
 echo %WHITE%For updates, insights and more, follow us on Twitter: @Jisllos
-echo %WHITE%To contribute or report issues, visit our GitHub page: https://github.com/Jisllos/Perfect-Windows
+echo %WHITE%To contribute or report issues, visit our GitHub page: https://github.com/Jisll/windows11
 echo.
 pause
 goto :Main-Menu
