@@ -224,8 +224,35 @@ reg add "HKCU\System\GameConfigStore" /v GameDVR_EFSEFeatureFlags /t REG_DWORD /
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\GameDVR" /v AllowGameDVR /t REG_DWORD /d 0 /f
 
 cls
+echo Are you sure you want to disable mitigations? This action can have both positive and negative impacts.
+echo !BRIGHT_GREEN!Positive: It might improve system performance.
+echo !BRIGHT_RED!Negative: It could potentially make your system more vulnerable to certain types of security threats.!BRIGHT_WHITE!
+echo Please type !BRIGHT_MAGENTA!YES !BRIGHT_WHITE!to continue or any other key to abort.
+set /p UserInput="Enter your choice: "
+if /I "%UserInput%"=="YES" (
+    echo !BRIGHT_WHITE!Disabling Mitigations
+    powershell "ForEach($v in (Get-Command -Name \"Set-ProcessMitigation\").Parameters[\"Disable\"].Attributes.ValidValues){Set-ProcessMitigation -System -Disable $v.ToString() -ErrorAction SilentlyContinue}" 
+    echo !BRIGHT_WHITE!Removing Image File Execution Options
+    powershell "Remove-Item -Path \"HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\*\" -Recurse -ErrorAction SilentlyContinue"
+    echo !BRIGHT_WHITE!Updating Registry Settings
+    reg add "HKLM\SOFTWARE\Policies\Microsoft\FVE" /v "DisableExternalDMAUnderLock" /t REG_DWORD /d "0" /f
+    reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\DeviceGuard" /v "EnableVirtualizationBasedSecurity" /t REG_DWORD /d "0" /f
+    reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\DeviceGuard" /v "HVCIMATRequired" /t REG_DWORD /d "0" /f
+    reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\kernel" /v "DisableExceptionChainValidation" /t REG_DWORD /d "1" /f
+    reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\kernel" /v "KernelSEHOPEnabled" /t REG_DWORD /d "0" /f
+    reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /v "EnableCfg" /t REG_DWORD /d "0" /f
+    reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager" /v "ProtectionMode" /t REG_DWORD /d "0" /f
+    reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /v "FeatureSettings" /t REG_DWORD /d "1" /f
+    reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /v "FeatureSettingsOverride" /t REG_DWORD /d "3" /f
+    reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /v "FeatureSettingsOverrideMask" /t REG_DWORD /d "3" /f
+) else (
+    echo !BRIGHT_WHITE!Aborted
+)
+pause
+
+cls
 echo !BRIGHT_WHITE!All tweaks have been successfully applied! For the changes to take effect, please restart your computer.
-echo Press !DARK_MAGENTA!ENTER !BRIGHT_WHITE!to return to the main menu.
+echo Press !BRIGHT_MAGENTA!ENTER !BRIGHT_WHITE!to return to the main menu.
 pause >nul
 cls
 goto :Main-Menu
