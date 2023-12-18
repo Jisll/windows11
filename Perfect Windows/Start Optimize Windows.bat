@@ -224,17 +224,31 @@ reg add "HKCU\System\GameConfigStore" /v GameDVR_EFSEFeatureFlags /t REG_DWORD /
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\GameDVR" /v AllowGameDVR /t REG_DWORD /d 0 /f
 
 cls
-echo Are you sure you want to disable mitigations? This action can have both positive and negative impacts.
-echo !BRIGHT_GREEN!Positive: It might improve system performance.
-echo !BRIGHT_RED!Negative: It could potentially make your system more vulnerable to certain types of security threats.!BRIGHT_WHITE!
+echo Are you sure you want to disable system mitigations? 
+echo This can improve performance but also increases security risks.
+echo.
+echo !BRIGHT_GREEN!Positive: Improved system performance.
+echo !BRIGHT_RED!Negative: Increased vulnerability to security threats.!BRIGHT_WHITE!
+echo.
 echo Please type !BRIGHT_MAGENTA!YES !BRIGHT_WHITE!to continue or any other key to abort.
 set /p UserInput="Enter your choice: "
 if /I "%UserInput%"=="YES" (
-    echo !BRIGHT_WHITE!Disabling Mitigations
-    powershell "ForEach($v in (Get-Command -Name \"Set-ProcessMitigation\").Parameters[\"Disable\"].Attributes.ValidValues){Set-ProcessMitigation -System -Disable $v.ToString() -ErrorAction SilentlyContinue}" 
-    echo !BRIGHT_WHITE!Removing Image File Execution Options
-    powershell "Remove-Item -Path \"HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\*\" -Recurse -ErrorAction SilentlyContinue"
-    echo !BRIGHT_WHITE!Updating Registry Settings
+    echo !BRIGHT_WHITE!Disabling Mitigations...
+    call :DisableMitigations
+    echo !BRIGHT_WHITE!Mitigations have been disabled.
+) else (
+    echo !BRIGHT_RED!Operation aborted.
+)
+pause
+exit
+
+:DisableMitigations
+    powershell -Command "& {ForEach($v in (Get-Command -Name 'Set-ProcessMitigation').Parameters['Disable'].Attributes.ValidValues){Set-ProcessMitigation -System -Disable $v.ToString() -ErrorAction SilentlyContinue}}"
+    powershell -Command "& {Remove-Item -Path 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\*' -Recurse -ErrorAction SilentlyContinue}"
+    call :UpdateRegistry
+    goto :eof
+
+:UpdateRegistry
     reg add "HKLM\SOFTWARE\Policies\Microsoft\FVE" /v "DisableExternalDMAUnderLock" /t REG_DWORD /d "0" /f
     reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\DeviceGuard" /v "EnableVirtualizationBasedSecurity" /t REG_DWORD /d "0" /f
     reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\DeviceGuard" /v "HVCIMATRequired" /t REG_DWORD /d "0" /f
@@ -245,9 +259,6 @@ if /I "%UserInput%"=="YES" (
     reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /v "FeatureSettings" /t REG_DWORD /d "1" /f
     reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /v "FeatureSettingsOverride" /t REG_DWORD /d "3" /f
     reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /v "FeatureSettingsOverrideMask" /t REG_DWORD /d "3" /f
-) else (
-    echo !BRIGHT_WHITE!Aborted
-)
 pause
 
 cls
