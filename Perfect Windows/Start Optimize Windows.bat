@@ -7,12 +7,7 @@ title Perfect Windows
 call :Colors
 
 REM Check for Administrator Privileges
-whoami /groups | findstr /i /c:"S-1-16-12288" >nul
-if %errorlevel% neq 0 (
-    echo %BRIGHT_BLACK%To continue, run this tool as %DARK_RED%administrator%DARK_WHITE%.
-    pause
-    exit
-)
+whoami /groups | findstr /i /c:"S-1-16-12288" >nul 2>&1 || (echo %BRIGHT_BLACK%To continue, run this tool as %DARK_RED%administrator%DARK_WHITE%. && pause && exit)
 
 REM Main Menu
 :Main-Menu
@@ -186,8 +181,21 @@ reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\System" /v UploadUserActivitie
 
 REM Delete Temporary Files
 echo !BRIGHT_WHITE!Delete Temporary Files
-rd /s /q C:\Windows\Temp rd /s /q %TEMP%
-rd /s /q C:\Windows\Prefetch del /q /s /f “%LocalAppData%\Microsoft\Windows\INetCache*.*” > nul rd /s /q %LocalAppData%\Microsoft\Windows\INetCache rd /s /q %SystemDrive%$Recycle.Bin
+rd /s /q C:\Windows\Temp
+rd /s /q %TEMP%
+rd /s /q C:\Windows\Prefetch
+del /q /s /f "%LocalAppData%\Microsoft\Windows\INetCache\*.*" > nul
+rd /s /q %LocalAppData%\Microsoft\Windows\INetCache
+rd /s /q %SystemDrive%\$Recycle.Bin
+net stop wuauserv
+rd /s /q C:\Windows\SoftwareDistribution
+net start wuauserv
+for /F "tokens=*" %%G in ('wevtutil el') do (wevtutil cl "%%G")
+rd /s /q C:\ProgramData\Microsoft\Windows\WER\ReportQueue
+rd /s /q C:\ProgramData\Microsoft\Windows\WER\ReportArchive
+rd /s /q C:\Windows.old
+rd /s /q %LocalAppData%\DirectX Shader Cache
+del /f /s /q /a %LocalAppData%\Microsoft\Windows\Explorer\thumbcache_*.db
 
 REM Deny location access
 echo !BRIGHT_WHITE!Deny location access
