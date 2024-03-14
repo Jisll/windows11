@@ -1,6 +1,6 @@
 <h1 align="center"><img width="24px" src="https://images.pling.com/img/00/00/64/66/02/1700514/11.png"> Perfect Windows 11: Elevate Your Experience</h1>
 <p align="center">
-		<img src="https://cdn.discordapp.com/attachments/1071149320159641651/1211399126273630328/a29a35c0-48af-4d4c-80c5-83d7a09edd21.png?ex=65ee0e5a&is=65db995a&hm=61115164d3673703540dcdaa74a06f255df4f5d6b8d4f82f5739657a59c9ace4&">
+		<img src="https://cdn.discordapp.com/attachments/1071149320159641651/1217939235663904859/perfectwindows.png?ex=6605d94d&is=65f3644d&hm=5b6ef6f3396c906577fde9d8622af18dcfdb9cd65c7ef78ce62803fc7541e0cf&">
 </p> 
 
 <p align="center"><em>Unleash the full potential of Windows 11 with Perfect Windows 11's advanced optimizations, customizations, and tweaks.</em></p>
