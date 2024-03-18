@@ -231,6 +231,87 @@ reg add "HKCU\System\GameConfigStore" /v GameDVR_HonorUserFSEBehaviorMode /t REG
 reg add "HKCU\System\GameConfigStore" /v GameDVR_EFSEFeatureFlags /t REG_DWORD /d 0 /f
 reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\GameDVR" /v AllowGameDVR /t REG_DWORD /d 0 /f
 
+REM Disable Telemetry
+echo !BRIGHT_WHITE!Disable Telemetry...
+reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\DataCollection" /v AllowTelemetry /t REG_DWORD /d 0 /f
+
+REM Disable Compatibility Telemetry
+echo !BRIGHT_WHITE!Disable Compatibility Telemetry...
+reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\DataCollection" /v AllowTelemetry /t REG_DWORD /d 0 /f
+
+REM Disable Advertising ID
+echo !BRIGHT_WHITE!Disable Advertising ID...
+reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\AdvertisingInfo" /v Enabled /t REG_DWORD /d 0 /f
+
+REM Disable Wi-Fi Sense
+echo !BRIGHT_WHITE!Disable Wi-Fi Sense...
+reg add "HKLM\\Software\\Microsoft\\PolicyManager\\default\\WiFi\\AllowWiFiHotSpotReporting" /v Value /t REG_DWORD /d 0 /f
+reg add "HKLM\\Software\\Microsoft\\PolicyManager\\default\\WiFi\\AllowAutoConnectToWiFiSenseHotspots" /v Value /t REG_DWORD /d 0 /f
+
+REM Disable Diagnostic Data
+echo !BRIGHT_WHITE!Disable Diagnostic Data...
+reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\DataCollection" /v MaxTelemetryAllowed /t REG_DWORD /d 0 /f
+
+REM Disable Handwriting Data Sharing
+echo !BRIGHT_WHITE!Disable Handwriting Data Sharing...
+reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\HandwritingErrorReports" /v PreventHandwritingErrorReports /t REG_DWORD /d 1 /f
+
+REM Disable Windows Hello Biometrics
+echo !BRIGHT_WHITE!Disable Windows Hello Biometrics...
+reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Biometrics" /v Enabled /t REG_DWORD /d 0 /f
+
+REM Disable Timeline Function
+echo !BRIGHT_WHITE!Disable Timeline Function...
+reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\System" /v EnableActivityFeed /t REG_DWORD /d 0 /f
+
+REM Disable Location Tracking
+echo !BRIGHT_WHITE!Disable Location Tracking...
+reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\LocationAndSensors" /v DisableLocation /t REG_DWORD /d 1 /f
+
+REM Disable Feedback Notifications
+echo !BRIGHT_WHITE!Disable Feedback Notifications...
+reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\DataCollection" /v DoNotShowFeedbackNotifications /t REG_DWORD /d 1 /f
+
+REM Disable Windows Tips
+echo !BRIGHT_WHITE!Disable Windows Tips...
+reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\CloudContent" /v DisableSoftLanding /t REG_DWORD /d 1 /f
+
+REM Disable Lock Screen Ads
+echo !BRIGHT_WHITE!Disable Lock Screen Ads...
+reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\Personalization" /v NoLockScreenCamera /t REG_DWORD /d 1 /f
+
+REM Disable Automatic Installation of Apps
+echo !BRIGHT_WHITE!Disable Automatic Installation of Apps...
+reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\CloudContent" /v DisableWindowsConsumerFeatures /t REG_DWORD /d 1 /f
+
+REM Disable Start Menu App Suggestions
+echo !BRIGHT_WHITE!Disable Start Menu App Suggestions...
+reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager" /v SystemPaneSuggestionsEnabled /t REG_DWORD /d 0 /f
+
+REM Disable Setting App Ads
+echo !BRIGHT_WHITE!Disable Setting App Ads...
+reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager" /v SubscribedContent-338393Enabled /t REG_DWORD /d 0 /f
+
+REM Disable Customer Experience Improvement Program
+echo !BRIGHT_WHITE!Disable Customer Experience Improvement Program...
+reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\SQMClient\\Windows" /v CEIPEnable /t REG_DWORD /d 0 /f
+
+REM Disable Help Experience Program
+echo !BRIGHT_WHITE!Disable Help Experience Program...
+reg add "HKLM\\SOFTWARE\\Policies\\Assist" /v NoImplicitFeedback /t REG_DWORD /d 1 /f
+
+REM Disable Experimental Features
+echo !BRIGHT_WHITE!Disable Experimental Features...
+reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\FlightSettings" /v UserPreferredRedirectStage /t REG_DWORD /d 0 /f
+
+REM Disable Inventory Collector
+echo !BRIGHT_WHITE!Disable Inventory Collector...
+reg add "HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\DataCollection" /v AllowTelemetry /t REG_DWORD /d 0 /f
+
+REM Disable Get More Out of Windows
+echo !BRIGHT_WHITE!Disable Get More Out of Windows...
+reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager" /v SubscribedContent-353698Enabled /t REG_DWORD /d 0 /f
+
 cls
 echo Are you sure you want to disable system mitigations? 
 echo This can improve performance but also increases security risks.
