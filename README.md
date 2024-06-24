@@ -1,61 +1,124 @@
-<h1 align="center"><img width="24px" src="https://images.pling.com/img/00/00/64/66/02/1700514/11.png"> Perfect Windows 11: Elevate Your Experience</h1>
+<h1 align="center">
+  <img src="https://images.pling.com/img/00/00/64/66/02/1700514/11.png" width="48" alt="Windows 11 Logo">
+  Perfect Windows 11: Elevate Your Experience
+</h1>
+
 <p align="center">
-		<img src="https://cdn.discordapp.com/attachments/1071149320159641651/1217939235663904859/perfectwindows.png?ex=6605d94d&is=65f3644d&hm=5b6ef6f3396c906577fde9d8622af18dcfdb9cd65c7ef78ce62803fc7541e0cf&">
-</p> 
+  <img src="https://raw.githubusercontent.com/Jisll/windows11/main/perfectwindows.png" alt="Perfect Windows 11 Banner" width="800">
+</p>
 
-<p align="center"><em>Unleash the full potential of Windows 11 with Perfect Windows 11's advanced optimizations, customizations, and tweaks.</em></p>
+<p align="center">
+  <em>Unleash the full potential of Windows 11 with advanced optimizations, customizations, and tweaks.</em>
+</p>
 
-## 🎁 Welcome to Perfect Windows 11
+<p align="center">
+  <a href="#-features">Features</a> •
+  <a href="#-quick-start">Quick Start</a> •
+  <a href="#-usage">Usage</a> •
+  <a href="#-contribute">Contribute</a> •
+  <a href="#-support">Support</a> •
+  <a href="#-license">License</a>
+</p>
 
-Welcome to the **Perfect Windows 11** repository! Our mission is to provide a comprehensive toolkit of features, optimizations, and customization scripts that will transform your Windows 11 experience.
+<p align="center">
+  <a href="https://github.com/Jisll/windows11/stargazers"><img src="https://img.shields.io/github/stars/Jisll/windows11?style=for-the-badge" alt="Stars"></a>
+  <a href="https://github.com/Jisll/windows11/network/members"><img src="https://img.shields.io/github/forks/Jisll/windows11?style=for-the-badge" alt="Forks"></a>
+  <a href="https://github.com/Jisll/windows11/issues"><img src="https://img.shields.io/github/issues/Jisll/windows11?style=for-the-badge" alt="Issues"></a>
+  <a href="https://github.com/Jisll/windows11/blob/main/LICENSE.md"><img src="https://img.shields.io/github/license/Jisll/windows11?style=for-the-badge" alt="License"></a>
+</p>
 
-## 🚀 Quick Start Guide
+---
 
-### Embark on Your Optimization Journey
+## 🌟 Welcome to Perfect Windows 11
+
+Transform your Windows 11 experience with our comprehensive toolkit of optimizations, customizations, and tweaks. Perfect Windows 11 is designed to enhance performance, improve privacy, and unlock hidden features of your operating system.
+
+## 🚀 Quick Start
 
 Get started with these simple steps:
 
-1. **Clone the Repository**: Use `git clone https://github.com/Jisll/windows11` to get a copy of the repository.
-2. **Locate the Script**: Navigate to "`Start Optimize Windows.bat`" in the cloned repository.
-3. **Run the Script**: Double-click the script to apply a wide range of enhancements.
-4. **Backup Your Data**: Remember to backup your data regularly to prevent any loss.
-5. **Reboot**: Restart your system to see the changes in action.
+1. **Clone the Repository**
+   ```
+   git clone https://github.com/Jisll/windows11
+   ```
 
-## 📑 Take Control of Your Windows System Configuration
+2. **Navigate to the Script**
+   Locate `Start Optimize Windows.bat` in the cloned repository.
 
-### Key Features
+3. **Run the Script**
+   Double-click the script to begin the optimization process.
 
-- **Service Configuration**: Gain control over various system services.
-- **Telemetry Management**: Limit the collection of telemetry data.
-- **Boot Menu Policy**: Switch to Legacy mode when necessary.
-- **Privacy Enhancements**: Improve privacy with tweaks to Wi-Fi Sense, activity feed, and more.
-- **Temporary Files Cleanup**: Free up disk space.
-- **Power and Performance**: Optimize power management and enhance user experience.
+4. **Backup Your Data**
+   Always create a backup before making system changes.
 
-### Usage Guidelines
+5. **Reboot**
+   Restart your system to apply all changes.
 
-Use the script responsibly. Always create a backup before making changes.
+## 🛠 Features
 
-## ⚠️ Disclaimer
+<table>
+  <tr>
+    <td align="center"><img src="https://img.icons8.com/color/48/000000/settings.png"/><br><b>Service Configuration</b></td>
+    <td align="center"><img src="https://img.icons8.com/color/48/000000/privacy.png"/><br><b>Privacy Enhancements</b></td>
+    <td align="center"><img src="https://img.icons8.com/color/48/000000/speed.png"/><br><b>Performance Boost</b></td>
+  </tr>
+  <tr>
+    <td align="center"><img src="https://img.icons8.com/color/48/000000/delete-file.png"/><br><b>Telemetry Management</b></td>
+    <td align="center"><img src="https://img.icons8.com/color/48/000000/broom.png"/><br><b>System Cleanup</b></td>
+    <td align="center"><img src="https://img.icons8.com/color/48/000000/paint-palette.png"/><br><b>UI Customization</b></td>
+  </tr>
+</table>
 
-The **Perfect Windows 11** tweaks are designed to enhance your experience but are not affiliated with Microsoft. While we've thoroughly tested the tweaks, we recommend having backups and exercising caution.
+- **Advanced Service Configuration**: Fine-tune system services for optimal performance.
+- **Enhanced Privacy Controls**: Limit data collection and improve overall system privacy.
+- **Boot Menu Optimization**: Switch between Legacy and UEFI boot modes seamlessly.
+- **Temporary File Cleanup**: Free up valuable disk space automatically.
+- **Power Management**: Optimize power settings for better battery life or maximum performance.
+- **UI Customization**: Personalize your Windows 11 experience with advanced tweaks.
 
-> "Confidently tweak your Windows environment with our comprehensive system configuration script."
+## 📊 Usage
 
-## 🤝 Be Part of Our Community
+1. **Review Options**: Carefully read through the available optimizations before applying.
+2. **Select Tweaks**: Choose the specific enhancements you want to apply.
+3. **Apply Changes**: Run the script and follow the on-screen prompts.
+4. **Monitor Performance**: Keep track of system changes and performance improvements.
 
-We welcome contributions! Feel free to open issues, create pull requests, or join our community chat.
+> 💡 **Pro Tip**: Create a system restore point before applying any tweaks for easy rollback if needed.
 
-## ✒️ About the Author
+## 🤝 Contribute
 
-- **Jisll** - Profile
+We welcome contributions from the community! Here's how you can help:
 
-## 📜 License
+- **Report Bugs**: Open an issue for any bugs you encounter.
+- **Suggest Enhancements**: Have ideas? We'd love to hear them!
+- **Submit Pull Requests**: Help us improve the project with your code.
 
-This project is licensed under the specified license - see the [LICENSE.md](https://github.com/Jisll/windows11/blob/main/LICENSE.md) file for details.
+Join our [community chat](https://discord.gg/perfectwindows) to discuss ideas and get support.
 
-## 🌟 Acknowledgments
+## 🆘 Support
 
-A big thank you to all contributors, testers, and users for their support in making Perfect Windows 11 even better.
+Need help? We've got you covered:
 
-<p align="center">💻 <em>Strive for excellence with Perfect Windows 11.</em> 💻</p>
+- **Documentation**: Check our [detailed guide](https://github.com/Jisll/windows11/wiki) for in-depth information.
+- **FAQ**: Find answers to common questions in our [FAQ section](https://github.com/Jisll/windows11/wiki/FAQ).
+- **Issues**: For technical issues, please open a [GitHub issue](https://github.com/Jisll/windows11/issues).
+
+## ⚖️ License
+
+This project is licensed under the MIT License. See the [LICENSE.md](https://github.com/Jisll/windows11/blob/main/LICENSE.md) file for details.
+
+## 👏 Acknowledgments
+
+A huge thank you to all our contributors, testers, and users. Your support and feedback make Perfect Windows 11 possible!
+
+<p align="center">
+  <img src="https://img.icons8.com/color/48/000000/windows-10.png" alt="Windows Logo">
+  <br>
+  <em>Elevate your Windows 11 experience to perfection.</em>
+</p>
+
+---
+
+<p align="center">
+  Made with ❤️ by <a href="https://github.com/Jisll">Jisll</a>
+</p>
