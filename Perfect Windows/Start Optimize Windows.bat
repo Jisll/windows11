@@ -81,24 +81,47 @@ set "services_delayed=BITS DoSvc WSearch wscsvc"
 
 echo %WHITE%Setting services to Automatic...
 for %%s in (%services_auto%) do (
-    sc config "%%s" start= auto
-    sc start "%%s"
-    echo Set %%s to Automatic
+    sc query "%%s" >nul 2>&1
+    if %errorlevel% equ 0 (
+        sc config "%%s" start= auto
+        sc start "%%s" >nul 2>&1
+        if %errorlevel% equ 0 (
+            echo Set %%s to Automatic
+        ) else (
+            echo Failed to start %%s
+        )
+    ) else (
+        echo Service %%s does not exist.
+    )
 )
 
 echo.
 echo %WHITE%Setting services to Disabled...
 for %%s in (%services_disabled%) do (
-    sc config "%%s" start= disabled
-    sc stop "%%s"
-    echo Disabled %%s
+    sc query "%%s" >nul 2>&1
+    if %errorlevel% equ 0 (
+        sc config "%%s" start= disabled
+        sc stop "%%s" >nul 2>&1
+        if %errorlevel% equ 0 (
+            echo Disabled %%s
+        ) else (
+            echo Failed to stop %%s
+        )
+    ) else (
+        echo Service %%s does not exist.
+    )
 )
 
 echo.
 echo %WHITE%Setting services to Automatic (Delayed Start)...
 for %%s in (%services_delayed%) do (
-    sc config "%%s" start= delayed-auto
-    echo Set %%s to Automatic (Delayed Start)
+    sc query "%%s" >nul 2>&1
+    if %errorlevel% equ 0 (
+        sc config "%%s" start= delayed-auto
+        echo Set %%s to Automatic (Delayed Start)
+    ) else (
+        echo Service %%s does not exist.
+    )
 )
 
 echo.
@@ -110,67 +133,80 @@ goto :MainMenu
 cls
 echo %CYAN%Cleaning Temporary Files...%WHITE%
 
-:: Clean Windows Temp folder
-rd /s /q C:\Windows\Temp
-md C:\Windows\Temp
+:: Define log file
+set "logFile=%~dp0cleanup_log.txt"
+echo [%date% %time%] Cleaning Temporary Files >> "%logFile%"
 
-:: Clean User Temp folder
-rd /s /q %TEMP%
-md %TEMP%
+:: Function to clean directories
+call :CleanDirectory "C:\Windows\Temp" "%logFile%"
+call :CleanDirectory "%TEMP%" "%logFile%"
+call :CleanDirectory "C:\Windows\Prefetch" "%logFile%"
+call :CleanDirectory "C:\Windows\SoftwareDistribution" "%logFile%"
+call :CleanDirectory "%SystemDrive%\$Recycle.Bin" "%logFile%"
 
-:: Clean Prefetch
-rd /s /q C:\Windows\Prefetch
-md C:\Windows\Prefetch
-
-:: Clean SoftwareDistribution folder
-net stop wuauserv
-rd /s /q C:\Windows\SoftwareDistribution
-md C:\Windows\SoftwareDistribution
-net start wuauserv
+:: Stop and start Windows Update service for SoftwareDistribution
+echo [%date% %time%] Stopping Windows Update Service >> "%logFile%"
+net stop wuauserv >nul 2>&1
+echo [%date% %time%] Starting Windows Update Service >> "%logFile%"
+net start wuauserv >nul 2>&1
 
 :: Clean Windows.old if it exists
-if exist C:\Windows.old rd /s /q C:\Windows.old
-
-:: Empty Recycle Bin
-rd /s /q %SystemDrive%\$Recycle.Bin
+if exist C:\Windows.old (
+    echo [%date% %time%] Removing Windows.old >> "%logFile%"
+    rd /s /q C:\Windows.old >> "%logFile%" 2>&1
+)
 
 :: Clear Event Logs
-for /F "tokens=*" %%G in ('wevtutil el') do (wevtutil cl "%%G")
+echo [%date% %time%] Clearing Event Logs >> "%logFile%"
+for /F "tokens=*" %%G in ('wevtutil el') do (
+    wevtutil cl "%%G" >nul 2>&1
+    echo Cleared %%G
+)
 
 :: Clear thumbnail cache
-del /f /s /q /a %LocalAppData%\Microsoft\Windows\Explorer\thumbcache_*.db
+echo [%date% %time%] Clearing Thumbnail Cache >> "%logFile%"
+del /f /s /q /a "%LocalAppData%\Microsoft\Windows\Explorer\thumbcache_*.db" >> "%logFile%" 2>&1
 
 echo %GREEN%Temporary files have been cleaned.%WHITE%
 pause
 goto :MainMenu
 
+:CleanDirectory
+:: %1 - Directory path
+:: %2 - Log file
+if exist %1 (
+    rd /s /q %1 >> "%2%" 2>&1
+    md %1 >> "%2%" 2>&1
+    echo Cleaned %1
+) else (
+    echo Directory %1 does not exist. >> "%2%"
+)
+exit /b
+
 :OptimizePrivacy
 cls
 echo %CYAN%Optimizing Privacy Settings...%WHITE%
 
-:: Disable Wi-Fi Sense
-reg add "HKLM\Software\Microsoft\PolicyManager\default\WiFi\AllowWiFiHotSpotReporting" /v Value /t REG_DWORD /d 0 /f
-reg add "HKLM\Software\Microsoft\PolicyManager\default\WiFi\AllowAutoConnectToWiFiSenseHotspots" /v Value /t REG_DWORD /d 0 /f
+:: Define log file
+set "logFile=%~dp0privacy_log.txt"
+echo [%date% %time%] Optimizing Privacy Settings >> "%logFile%"
 
-:: Disable Activity Feed
-reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\System" /v EnableActivityFeed /t REG_DWORD /d 0 /f
-reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\System" /v PublishUserActivities /t REG_DWORD /d 0 /f
-reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\System" /v UploadUserActivities /t REG_DWORD /d 0 /f
+:: Function to add registry keys
+call :AddRegKey "HKLM\Software\Microsoft\PolicyManager\default\WiFi" "AllowWiFiHotSpotReporting" "REG_DWORD" "0" "%logFile%"
+call :AddRegKey "HKLM\Software\Microsoft\PolicyManager\default\WiFi" "AllowAutoConnectToWiFiSenseHotspots" "REG_DWORD" "0" "%logFile%"
 
-:: Disable location tracking
-reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\location" /v Value /t REG_SZ /d "Deny" /f
-reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Sensor\Overrides\{BFA794E4-F964-4FDB-90F6-51056BFE4B44}" /v SensorPermissionState /t REG_DWORD /d 0 /f
-reg add "HKLM\SYSTEM\CurrentControlSet\Services\lfsvc\Service\Configuration" /v Status /t REG_DWORD /d 0 /f
-reg add "HKLM\SYSTEM\Maps" /v AutoUpdateEnabled /t REG_DWORD /d 0 /f
+call :AddRegKey "HKLM\SOFTWARE\Policies\Microsoft\Windows\System" "EnableActivityFeed" "REG_DWORD" "0" "%logFile%"
+call :AddRegKey "HKLM\SOFTWARE\Policies\Microsoft\Windows\System" "PublishUserActivities" "REG_DWORD" "0" "%logFile%"
+call :AddRegKey "HKLM\SOFTWARE\Policies\Microsoft\Windows\System" "UploadUserActivities" "REG_DWORD" "0" "%logFile%"
 
-:: Disable Windows Hello Biometrics
-reg add "HKLM\SOFTWARE\Policies\Microsoft\Biometrics" /v Enabled /t REG_DWORD /d 0 /f
-
-:: Disable Timeline
-reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\System" /v EnableActivityFeed /t REG_DWORD /d 0 /f
-
-:: Disable Storage Sense
-reg delete "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy" /f
+call :AddRegKey "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\CapabilityAccessManager\ConsentStore\location" "Value" "REG_SZ" "Deny" "%logFile%"
+call :AddRegKey "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Sensor\Overrides\{BFA794E4-F964-4FDB-90F6-51056BFE4B44}" "SensorPermissionState" "REG_DWORD" "0" "%logFile%"
+call :AddRegKey "HKLM\SYSTEM\CurrentControlSet\Services\lfsvc\Service\Configuration" "Status" "REG_DWORD" "0" "%logFile%"
+call :AddRegKey "HKLM\SYSTEM\Maps" "AutoUpdateEnabled" "REG_DWORD" "0" "%logFile%"
+call :AddRegKey "HKLM\SOFTWARE\Policies\Microsoft\Biometrics" "Enabled" "REG_DWORD" "0" "%logFile%"
+call :AddRegKey "HKLM\SOFTWARE\Policies\Microsoft\Windows\System" "EnableActivityFeed" "REG_DWORD" "0" "%logFile%"
+reg delete "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\StorageSense\Parameters\StoragePolicy" /f >> "%logFile%" 2>&1
+echo Deleted Storage Sense StoragePolicy >> "%logFile%"
 
 echo %GREEN%Privacy settings have been optimized.%WHITE%
 pause
@@ -180,25 +216,21 @@ goto :MainMenu
 cls
 echo %CYAN%Disabling Telemetry and Data Collection...%WHITE%
 
-:: Disable Telemetry
-reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\DataCollection" /v AllowTelemetry /t REG_DWORD /d 0 /f
-reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\DataCollection" /v AllowTelemetry /t REG_DWORD /d 0 /f
+:: Define log file
+set "logFile=%~dp0telemetry_log.txt"
+echo [%date% %time%] Disabling Telemetry and Data Collection >> "%logFile%"
 
-:: Disable Customer Experience Improvement Program
-reg add "HKLM\SOFTWARE\Policies\Microsoft\SQMClient\Windows" /v CEIPEnable /t REG_DWORD /d 0 /f
-reg add "HKLM\SOFTWARE\Policies\Microsoft\SQMClient" /v CEIPEnable /t REG_DWORD /d 0 /f
+call :AddRegKey "HKLM\SOFTWARE\Policies\Microsoft\Windows\DataCollection" "AllowTelemetry" "REG_DWORD" "0" "%logFile%"
+call :AddRegKey "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\DataCollection" "AllowTelemetry" "REG_DWORD" "0" "%logFile%"
 
-:: Disable Application Impact Telemetry
-reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\AppCompat" /v AITEnable /t REG_DWORD /d 0 /f
+call :AddRegKey "HKLM\SOFTWARE\Policies\Microsoft\SQMClient\Windows" "CEIPEnable" "REG_DWORD" "0" "%logFile%"
+call :AddRegKey "HKLM\SOFTWARE\Policies\Microsoft\SQMClient" "CEIPEnable" "REG_DWORD" "0" "%logFile%"
 
-:: Disable Inventory Collector
-reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\AppCompat" /v DisableInventory /t REG_DWORD /d 1 /f
+call :AddRegKey "HKLM\SOFTWARE\Policies\Microsoft\Windows\AppCompat" "AITEnable" "REG_DWORD" "0" "%logFile%"
+call :AddRegKey "HKLM\SOFTWARE\Policies\Microsoft\Windows\AppCompat" "DisableInventory" "REG_DWORD" "1" "%logFile%"
+call :AddRegKey "HKLM\SOFTWARE\Policies\Microsoft\Windows\AppCompat" "DisableUAR" "REG_DWORD" "1" "%logFile%"
 
-:: Disable Steps Recorder
-reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\AppCompat" /v DisableUAR /t REG_DWORD /d 1 /f
-
-:: Disable Windows Error Reporting
-reg add "HKLM\SOFTWARE\Microsoft\Windows\Windows Error Reporting" /v Disabled /t REG_DWORD /d 1 /f
+call :AddRegKey "HKLM\SOFTWARE\Microsoft\Windows\Windows Error Reporting" "Disabled" "REG_DWORD" "1" "%logFile%"
 
 echo %GREEN%Telemetry and data collection have been disabled.%WHITE%
 pause
@@ -208,35 +240,43 @@ goto :MainMenu
 cls
 echo %CYAN%Optimizing System Performance...%WHITE%
 
-:: Disable Superfetch
-sc stop SysMain
-sc config SysMain start= disabled
+:: Define log file
+set "logFile=%~dp0performance_log.txt"
+echo [%date% %time%] Optimizing System Performance >> "%logFile%"
+
+:: Disable Superfetch (SysMain)
+sc stop SysMain >> "%logFile%" 2>&1
+sc config SysMain start= disabled >> "%logFile%" 2>&1
+echo Disabled SysMain (Superfetch) >> "%logFile%"
 
 :: Optimize visual effects for performance
-reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects" /v VisualFXSetting /t REG_DWORD /d 2 /f
+call :AddRegKey "HKCU\Software\Microsoft\Windows\CurrentVersion\Explorer\VisualEffects" "VisualFXSetting" "REG_DWORD" "2" "%logFile%"
 
 :: Disable Transparency
-reg add "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize" /v EnableTransparency /t REG_DWORD /d 0 /f
+call :AddRegKey "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Themes\Personalize" "EnableTransparency" "REG_DWORD" "0" "%logFile%"
 
 :: Disable Animations
-reg add "HKCU\Control Panel\Desktop\WindowMetrics" /v MinAnimate /t REG_SZ /d 0 /f
+call :AddRegKey "HKCU\Control Panel\Desktop\WindowMetrics" "MinAnimate" "REG_SZ" "0" "%logFile%"
 
 :: Increase DNS Cache
-ipconfig /flushdns
-reg add "HKLM\SYSTEM\CurrentControlSet\Services\Dnscache\Parameters" /v CacheHashTableBucketSize /t REG_DWORD /d 1 /f
-reg add "HKLM\SYSTEM\CurrentControlSet\Services\Dnscache\Parameters" /v CacheHashTableSize /t REG_DWORD /d 384 /f
+ipconfig /flushdns >> "%logFile%" 2>&1
+call :AddRegKey "HKLM\SYSTEM\CurrentControlSet\Services\Dnscache\Parameters" "CacheHashTableBucketSize" "REG_DWORD" "1" "%logFile%"
+call :AddRegKey "HKLM\SYSTEM\CurrentControlSet\Services\Dnscache\Parameters" "CacheHashTableSize" "REG_DWORD" "384" "%logFile%"
 
 :: Optimize Boot Performance
-bcdedit /set {current} bootmenupolicy Standard
+bcdedit /set {current} bootmenupolicy Standard >> "%logFile%" 2>&1
+echo Set bootmenupolicy to Standard >> "%logFile%"
 
 :: Disable Hibernation
-powercfg /h off
+powercfg /h off >> "%logFile%" 2>&1
+echo Disabled Hibernation >> "%logFile%"
 
-:: Optimize for performance
-powercfg /setactive 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c
+:: Optimize for performance power plan
+powercfg /setactive 8c5e7fda-e8bf-4a96-9a85-a6e23a8c635c >> "%logFile%" 2>&1
+echo Set Power Plan to High Performance >> "%logFile%"
 
 :: Disable Fast Startup
-reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Power" /v HiberbootEnabled /t REG_DWORD /d 0 /f
+call :AddRegKey "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Power" "HiberbootEnabled" "REG_DWORD" "0" "%logFile%"
 
 echo %GREEN%System performance has been optimized.%WHITE%
 pause
@@ -249,20 +289,29 @@ echo Are you sure you want to proceed? Type %YELLOW%YES%WHITE% to continue or an
 set /p "confirm=>"
 if /i not "%confirm%"=="YES" goto :MainMenu
 
+:: Define log file
+set "logFile=%~dp0mitigations_log.txt"
+echo [%date% %time%] Disabling System Mitigations >> "%logFile%"
+
 echo %CYAN%Disabling System Mitigations...%WHITE%
 
-powershell -Command "& {ForEach($v in (Get-Command -Name 'Set-ProcessMitigation').Parameters['Disable'].Attributes.ValidValues){Set-ProcessMitigation -System -Disable $v.ToString() -ErrorAction SilentlyContinue}}"
-powershell -Command "& {Remove-Item -Path 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\*' -Recurse -ErrorAction SilentlyContinue}"
+:: Disable Process Mitigations via PowerShell
+powershell -Command "Get-ProcessMitigation -System | ForEach-Object { Set-ProcessMitigation -System -Disable @{($_.Feature)} }" >> "%logFile%" 2>&1
 
-reg add "HKLM\SOFTWARE\Policies\Microsoft\FVE" /v "DisableExternalDMAUnderLock" /t REG_DWORD /d "0" /f
-reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\DeviceGuard" /v "EnableVirtualizationBasedSecurity" /t REG_DWORD /d "0" /f
-reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\DeviceGuard" /v "HVCIMATRequired" /t REG_DWORD /d "0" /f
-reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\kernel" /v "DisableExceptionChainValidation" /t REG_DWORD /d "1" /f
-reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\kernel" /v "KernelSEHOPEnabled" /t REG_DWORD /d "0" /f
-reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /v "EnableCfg" /t REG_DWORD /d "0" /f
-reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager" /v "ProtectionMode" /t REG_DWORD /d "0" /f
-reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Mreg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /v "FeatureSettingsOverride" /t REG_DWORD /d "3" /f
-reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /v "FeatureSettingsOverrideMask" /t REG_DWORD /d "3" /f
+:: Remove Image File Execution Options
+powershell -Command "Remove-Item -Path 'HKLM:\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Image File Execution Options\*' -Recurse -ErrorAction SilentlyContinue" >> "%logFile%" 2>&1
+echo Removed Image File Execution Options >> "%logFile%"
+
+:: Modify Registry to Disable Various Security Features
+call :AddRegKey "HKLM\SOFTWARE\Policies\Microsoft\FVE" "DisableExternalDMAUnderLock" "REG_DWORD" "0" "%logFile%"
+call :AddRegKey "HKLM\SOFTWARE\Policies\Microsoft\Windows\DeviceGuard" "EnableVirtualizationBasedSecurity" "REG_DWORD" "0" "%logFile%"
+call :AddRegKey "HKLM\SOFTWARE\Policies\Microsoft\Windows\DeviceGuard" "HVCIMATRequired" "REG_DWORD" "0" "%logFile%"
+call :AddRegKey "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\kernel" "DisableExceptionChainValidation" "REG_DWORD" "1" "%logFile%"
+call :AddRegKey "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\kernel" "KernelSEHOPEnabled" "REG_DWORD" "0" "%logFile%"
+call :AddRegKey "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" "EnableCfg" "REG_DWORD" "0" "%logFile%"
+call :AddRegKey "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager" "ProtectionMode" "REG_DWORD" "0" "%logFile%"
+call :AddRegKey "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" "FeatureSettingsOverride" "REG_DWORD" "3" "%logFile%"
+call :AddRegKey "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" "FeatureSettingsOverrideMask" "REG_DWORD" "3" "%logFile%"
 
 echo %GREEN%System mitigations have been disabled.%WHITE%
 echo %RED%WARNING: Your system may be more vulnerable to certain types of attacks.%WHITE%
@@ -318,6 +367,20 @@ set "BRIGHT_BLUE=%ESC%[94m"
 set "BRIGHT_MAGENTA=%ESC%[95m"
 set "BRIGHT_CYAN=%ESC%[96m"
 set "BRIGHT_WHITE=%ESC%[97m"
+exit /b
+
+:AddRegKey
+:: %1 - Registry Path
+:: %2 - Value Name
+:: %3 - Value Type
+:: %4 - Value Data
+:: %5 - Log File
+reg add "%1" /v "%2" /t "%3" /d "%4" /f >> "%5%" 2>&1
+if %errorlevel% equ 0 (
+    echo Added/Updated "%2" in "%1" >> "%5%"
+) else (
+    echo Failed to add/update "%2" in "%1" >> "%5%"
+)
 exit /b
 
 :EOF
