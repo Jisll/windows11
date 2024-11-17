@@ -28,12 +28,15 @@ echo.
 set "choice="
 set /p choice=%DARK_WHITE%Choose an option to continue: !BRIGHT_BLUE!
 if not defined choice goto :Main-Menu
-call :Menu_[%choice%] 2>nul || (echo %BRIGHT_BLACK%Invalid choice, please try again.%DARK_WHITE% & pause)
+if "%choice%"=="1" goto Menu_1
+if "%choice%"=="2" goto Menu_2
+if /I "%choice%"=="E" goto Menu_E
+echo %BRIGHT_BLACK%Invalid choice, please try again.%DARK_WHITE%
+pause
 goto :Main-Menu
 
 REM Option 1: Perfect Windows
-:Menu_[1] Run Perfect Windows
-
+:Menu_1
 REM Services
 set services_auto=AudioEndpointBuilder Audiosrv BITS BFE BluetoothUserService_dc2a4 BrokerInfrastructure Browser BthAvctpSvc BthHFSrv CaptureService_dc2a4 CDPUserSvc_dc2a4 COMSysApp CoreMessagingRegistrar CredentialEnrollmentManagerUserSvc_dc2a4 CryptSvc DPS Dhcp Dnscache DoSvc DsmSvc DusmSvc EapHost EventLog EventSystem FrameServer GraphicsPerfSvc HvHost IKEEXT LanmanServer LanmanWorkstation LicenseManager MMCSS MpsSvc NaturalAuthentication NgcCtnrSvc NgcSvc NlaSvc OneSyncSvc_dc2a4 ProfSvc Power PrintWorkflowUserSvc_dc2a4 RasAuto RasMan RemoteRegistry RpcEptMapper RpcLocator RpcSs SamSs Schedule SecurityHealthService SENS ShellHWDetection Spooler SSDPSRV SysMain TabletInputService Themes UsoSvc VGAuthService VMTools VSS WebClient WdiServiceHost WinDefend WlanSvc WpnUserService_dc2a4 XblAuthManager XboxNetApiSvc bthserv gpsvc iphlpsvc mpssvc nsi p2psvc perceptionsimulation sppsvc svsvc tzautoupdate vds webthreatdefusersvc_dc2a4 wscsvc
 set services_disabled=AJRouter AppVClient DiagTrack DialogBlockingService DistributedLinkTrackingService EdgeUpdate edgeupdatem embeddedmode hidserv shpamsvc spectrum ssh-agent uhssvc wercplsupport webthreatdefsvc wuauserv
@@ -123,9 +126,9 @@ reg add "HKLM\SYSTEM\CurrentControlSet\Services\LanmanServer\Parameters" /v IRPS
 reg add "HKCU\SOFTWARE\Policies\Microsoft\Windows\Windows Feeds" /v EnableFeeds /t REG_DWORD /d "0" /f
 reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Feeds" /v ShellFeedsTaskbarViewMode /t REG_DWORD /d "2" /f
 reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\Policies\Explorer" /v HideSCAMeetNow /t REG_DWORD /d "1" /f
-reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games" /v GPU Priority /t REG_DWORD /d "8" /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games" /v "GPU Priority" /t REG_DWORD /d "8" /f
 reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games" /v Priority /t REG_DWORD /d "6" /f
-reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games" /v Scheduling Category /t REG_SZ /d "High" /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows NT\CurrentVersion\Multimedia\SystemProfile\Tasks\Games" /v "Scheduling Category" /t REG_SZ /d "High" /f
 
 REM Change boot menu policy to Legacy
 echo !BRIGHT_WHITE!Changing boot menu policy to Legacy mode...
@@ -135,13 +138,12 @@ echo !BRIGHT_WHITE!Boot menu policy has been successfully changed to Legacy mode
 REM Check Windows version before executing additional commands
 echo !BRIGHT_WHITE!Check Windows version before executing additional commands...
 ver | find "Version 10.0." > nul
-if errorlevel 1 goto :eof
+if errorlevel 1 goto continue
 
 REM Modify Task Manager settings for Windows versions older than 22557
 echo !BRIGHT_WHITE!Modify Task Manager settings for Windows versions older than 22557...
-set taskmgr=""
-for /f "tokens=2 delims= " %%v in ('reg query "HKCU\Software\Microsoft\Windows\CurrentVersion\TaskManager" /v Preferences ^| find Preferences') do set taskmgr=%%v
-if %taskmgr% lss 22557 (
+for /f "tokens=4-5 delims=[]. " %%i in ('ver') do set "winver=%%i.%%j"
+if "%winver%" lss "22557" (
     start "" /min taskmgr.exe
     :loop
     ping -n 1 127.0.0.1 > nul
@@ -156,7 +158,7 @@ if %taskmgr% lss 22557 (
 
 REM Group svchost.exe processes
 echo !BRIGHT_WHITE!Group svchost.exe processes...
-for /f "tokens=1,2,*" %%a in ('wmic memorychip get capacity ^| find /i " " ^| find "."') do set ram=%%c
+for /f "skip=1 tokens=1" %%a in ('wmic computersystem get totalphysicalmemory') do set "ram=%%a"
 reg add "HKLM\SYSTEM\CurrentControlSet\Control" /v SvcHostSplitThresholdInKB /t REG_DWORD /d %ram% /f
 
 REM Delete AutoLogger-Diagtrack-Listener.etl and deny permissions
@@ -194,8 +196,8 @@ for /F "tokens=*" %%G in ('wevtutil el') do (wevtutil cl "%%G")
 rd /s /q C:\ProgramData\Microsoft\Windows\WER\ReportQueue
 rd /s /q C:\ProgramData\Microsoft\Windows\WER\ReportArchive
 rd /s /q C:\Windows.old
-rd /s /q %LocalAppData%\DirectX Shader Cache
-del /f /s /q /a %LocalAppData%\Microsoft\Windows\Explorer\thumbcache_*.db
+rd /s /q "%LocalAppData%\DirectX Shader Cache"
+del /f /s /q /a "%LocalAppData%\Microsoft\Windows\Explorer\thumbcache_*.db"
 
 REM Deny location access
 echo !BRIGHT_WHITE!Deny location access
@@ -233,84 +235,84 @@ reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\GameDVR" /v AllowGameDVR /t RE
 
 REM Disable Telemetry
 echo !BRIGHT_WHITE!Disable Telemetry...
-reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\DataCollection" /v AllowTelemetry /t REG_DWORD /d 0 /f
+reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\DataCollection" /v AllowTelemetry /t REG_DWORD /d 0 /f
 
 REM Disable Compatibility Telemetry
 echo !BRIGHT_WHITE!Disable Compatibility Telemetry...
-reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\DataCollection" /v AllowTelemetry /t REG_DWORD /d 0 /f
+reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\DataCollection" /v AllowTelemetry /t REG_DWORD /d 0 /f
 
 REM Disable Advertising ID
 echo !BRIGHT_WHITE!Disable Advertising ID...
-reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\AdvertisingInfo" /v Enabled /t REG_DWORD /d 0 /f
+reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\AdvertisingInfo" /v Enabled /t REG_DWORD /d 0 /f
 
 REM Disable Wi-Fi Sense
 echo !BRIGHT_WHITE!Disable Wi-Fi Sense...
-reg add "HKLM\\Software\\Microsoft\\PolicyManager\\default\\WiFi\\AllowWiFiHotSpotReporting" /v Value /t REG_DWORD /d 0 /f
-reg add "HKLM\\Software\\Microsoft\\PolicyManager\\default\\WiFi\\AllowAutoConnectToWiFiSenseHotspots" /v Value /t REG_DWORD /d 0 /f
+reg add "HKLM\Software\Microsoft\PolicyManager\default\WiFi\AllowWiFiHotSpotReporting" /v Value /t REG_DWORD /d 0 /f
+reg add "HKLM\Software\Microsoft\PolicyManager\default\WiFi\AllowAutoConnectToWiFiSenseHotspots" /v Value /t REG_DWORD /d 0 /f
 
 REM Disable Diagnostic Data
 echo !BRIGHT_WHITE!Disable Diagnostic Data...
-reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\DataCollection" /v MaxTelemetryAllowed /t REG_DWORD /d 0 /f
+reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\DataCollection" /v MaxTelemetryAllowed /t REG_DWORD /d 0 /f
 
 REM Disable Handwriting Data Sharing
 echo !BRIGHT_WHITE!Disable Handwriting Data Sharing...
-reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\HandwritingErrorReports" /v PreventHandwritingErrorReports /t REG_DWORD /d 1 /f
+reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\HandwritingErrorReports" /v PreventHandwritingErrorReports /t REG_DWORD /d 1 /f
 
 REM Disable Windows Hello Biometrics
 echo !BRIGHT_WHITE!Disable Windows Hello Biometrics...
-reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Biometrics" /v Enabled /t REG_DWORD /d 0 /f
+reg add "HKLM\SOFTWARE\Policies\Microsoft\Biometrics" /v Enabled /t REG_DWORD /d 0 /f
 
 REM Disable Timeline Function
 echo !BRIGHT_WHITE!Disable Timeline Function...
-reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\System" /v EnableActivityFeed /t REG_DWORD /d 0 /f
+reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\System" /v EnableActivityFeed /t REG_DWORD /d 0 /f
 
 REM Disable Location Tracking
 echo !BRIGHT_WHITE!Disable Location Tracking...
-reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\LocationAndSensors" /v DisableLocation /t REG_DWORD /d 1 /f
+reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\LocationAndSensors" /v DisableLocation /t REG_DWORD /d 1 /f
 
 REM Disable Feedback Notifications
 echo !BRIGHT_WHITE!Disable Feedback Notifications...
-reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\DataCollection" /v DoNotShowFeedbackNotifications /t REG_DWORD /d 1 /f
+reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\DataCollection" /v DoNotShowFeedbackNotifications /t REG_DWORD /d 1 /f
 
 REM Disable Windows Tips
 echo !BRIGHT_WHITE!Disable Windows Tips...
-reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\CloudContent" /v DisableSoftLanding /t REG_DWORD /d 1 /f
+reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\CloudContent" /v DisableSoftLanding /t REG_DWORD /d 1 /f
 
 REM Disable Lock Screen Ads
 echo !BRIGHT_WHITE!Disable Lock Screen Ads...
-reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\Personalization" /v NoLockScreenCamera /t REG_DWORD /d 1 /f
+reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\Personalization" /v NoLockScreenCamera /t REG_DWORD /d 1 /f
 
 REM Disable Automatic Installation of Apps
 echo !BRIGHT_WHITE!Disable Automatic Installation of Apps...
-reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\Windows\\CloudContent" /v DisableWindowsConsumerFeatures /t REG_DWORD /d 1 /f
+reg add "HKLM\SOFTWARE\Policies\Microsoft\Windows\CloudContent" /v DisableWindowsConsumerFeatures /t REG_DWORD /d 1 /f
 
 REM Disable Start Menu App Suggestions
 echo !BRIGHT_WHITE!Disable Start Menu App Suggestions...
-reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager" /v SystemPaneSuggestionsEnabled /t REG_DWORD /d 0 /f
+reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /v SystemPaneSuggestionsEnabled /t REG_DWORD /d 0 /f
 
 REM Disable Setting App Ads
 echo !BRIGHT_WHITE!Disable Setting App Ads...
-reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager" /v SubscribedContent-338393Enabled /t REG_DWORD /d 0 /f
+reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /v SubscribedContent-338393Enabled /t REG_DWORD /d 0 /f
 
 REM Disable Customer Experience Improvement Program
 echo !BRIGHT_WHITE!Disable Customer Experience Improvement Program...
-reg add "HKLM\\SOFTWARE\\Policies\\Microsoft\\SQMClient\\Windows" /v CEIPEnable /t REG_DWORD /d 0 /f
+reg add "HKLM\SOFTWARE\Policies\Microsoft\SQMClient\Windows" /v CEIPEnable /t REG_DWORD /d 0 /f
 
 REM Disable Help Experience Program
 echo !BRIGHT_WHITE!Disable Help Experience Program...
-reg add "HKLM\\SOFTWARE\\Policies\\Assist" /v NoImplicitFeedback /t REG_DWORD /d 1 /f
+reg add "HKLM\SOFTWARE\Policies\Assist" /v NoImplicitFeedback /t REG_DWORD /d 1 /f
 
 REM Disable Experimental Features
 echo !BRIGHT_WHITE!Disable Experimental Features...
-reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\FlightSettings" /v UserPreferredRedirectStage /t REG_DWORD /d 0 /f
+reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\FlightSettings" /v UserPreferredRedirectStage /t REG_DWORD /d 0 /f
 
 REM Disable Inventory Collector
 echo !BRIGHT_WHITE!Disable Inventory Collector...
-reg add "HKLM\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Policies\\DataCollection" /v AllowTelemetry /t REG_DWORD /d 0 /f
+reg add "HKLM\SOFTWARE\Microsoft\Windows\CurrentVersion\Policies\DataCollection" /v AllowTelemetry /t REG_DWORD /d 0 /f
 
 REM Disable Get More Out of Windows
 echo !BRIGHT_WHITE!Disable Get More Out of Windows...
-reg add "HKCU\\Software\\Microsoft\\Windows\\CurrentVersion\\ContentDeliveryManager" /v SubscribedContent-353698Enabled /t REG_DWORD /d 0 /f
+reg add "HKCU\Software\Microsoft\Windows\CurrentVersion\ContentDeliveryManager" /v SubscribedContent-353698Enabled /t REG_DWORD /d 0 /f
 
 cls
 echo Are you sure you want to disable system mitigations? 
@@ -329,7 +331,12 @@ if /I "%UserInput%"=="YES" (
     echo !BRIGHT_RED!Operation aborted.
 )
 pause
-exit
+cls
+echo !BRIGHT_WHITE!All tweaks have been successfully applied! For the changes to take effect, please restart your computer.
+echo Press !BRIGHT_MAGENTA!ENTER !BRIGHT_WHITE!to return to the main menu.
+pause >nul
+cls
+goto :Main-Menu
 
 :DisableMitigations
     powershell -Command "& {ForEach($v in (Get-Command -Name 'Set-ProcessMitigation').Parameters['Disable'].Attributes.ValidValues){Set-ProcessMitigation -System -Disable $v.ToString() -ErrorAction SilentlyContinue}}"
@@ -348,17 +355,11 @@ exit
     reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /v "FeatureSettings" /t REG_DWORD /d "1" /f
     reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /v "FeatureSettingsOverride" /t REG_DWORD /d "3" /f
     reg add "HKLM\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management" /v "FeatureSettingsOverrideMask" /t REG_DWORD /d "3" /f
-pause
-
-cls
-echo !BRIGHT_WHITE!All tweaks have been successfully applied! For the changes to take effect, please restart your computer.
-echo Press !BRIGHT_MAGENTA!ENTER !BRIGHT_WHITE!to return to the main menu.
-pause >nul
-cls
-goto :Main-Menu
+    pause
+    goto :eof
 
 REM Option 2: Information
-:Menu_[2] Information
+:Menu_2
 cls
 echo.
 echo %BRIGHT_BLUE%Welcome to Perfect Windows - Your Ultimate Performance Enhancer!
@@ -377,7 +378,7 @@ pause
 goto :Main-Menu
 
 REM Option E: Exit
-:Menu_[E] Exit
+:Menu_E
 exit
 
 REM Colors
@@ -400,4 +401,3 @@ set "BRIGHT_CYAN=[96m"
 set "BRIGHT_WHITE=[97m"
 set "WHITE=[97m"
 exit /b
-:EOF
